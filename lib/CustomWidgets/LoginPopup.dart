@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginPopup{
 
   void showPopup(BuildContext context){
+    Login login = Login();
     final _loginFormKey = GlobalKey<FormState>();
     bool isLoginButtonDisabled = false;
     bool showUserNotFoundError = false;
@@ -53,8 +54,8 @@ class LoginPopup{
                             key: _loginFormKey,
                             child: Column(
                               children: [
-                                Login._buildLogin(),
-                                Login._buildPassword(),
+                                login._buildLogin(),
+                                login._buildPassword(),
                                 SizedBox(
                                   height: 40,
                                   width: 130,
@@ -85,7 +86,7 @@ class LoginPopup{
                                             });
                                           }else {
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
-                                            prefs.setString("sessionKey", token);
+                                            prefs.setString("accessToken", token);
                                             html.window.location.reload();
                                           }
                                           setState(() {
@@ -116,7 +117,7 @@ class Login {
   static String? _login;
   static String? _password;
 
-  static Widget _buildLogin(){
+  Widget _buildLogin(){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: SizedBox(
@@ -132,8 +133,8 @@ class Login {
             if(value == null || value.isEmpty) {
               return 'Login nie może być pusty';
             }
-            if(!RegExp(r"^[a-z0-9]*$").hasMatch(value)) {
-              return 'Login może zawierać tylko małe litery i cyfry';
+            if(!RegExp(r"^[a-z0-9]*$").hasMatch(value) || value.length > 19) {
+              return 'Tylko małe litery i cyfry oraz mniej niż 20 znaków';
             }
             return null;
           },
@@ -144,7 +145,7 @@ class Login {
       ),
     );
   }
-  static Widget _buildPassword(){
+  Widget _buildPassword(){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: SizedBox(

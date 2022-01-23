@@ -79,7 +79,6 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
                           ),
                         ],
                       ),
-                      Container(),
                       Container(
                         height: 300,
                         width: 250,

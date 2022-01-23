@@ -1,8 +1,11 @@
-import 'dart:math';
-
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recipy/CustomWidgets/CustomDropdown.dart';
 import 'package:recipy/CustomWidgets/LoginPopup.dart';
+import 'package:recipy/CustomWidgets/RegisterPopup.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
@@ -23,10 +26,37 @@ class _rNavBarState extends State<rNavBar> {
   // final _registrationFormKey = GlobalKey<FormState>();
   // bool isRegisterButtonDisabled = false;
   // bool showUserNotFoundError = false;
+  StreamController<bool> registerButtonStreamController = StreamController<bool>();
+  StreamController<String> loginButtonStreamController = StreamController<String>();
 
-  Future<String?> getSessionKey() async{
+  Future<String?> getAccessToken() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("sessionKey");
+    String? accessToken = prefs.getString("accessToken");
+    return accessToken;
+  }
+  Future<String?> getUserData() async{
+    String userData = await Requests.getUserData();
+    return userData;
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+      String? accessToken = await getAccessToken();
+      if (accessToken != null){
+        String? userData = await getUserData();
+        String username = jsonDecode(userData!)["username"];
+        loginButtonStreamController.add(username);
+        registerButtonStreamController.add(true);
+      }
+    });
+    super.initState();
+  }
+  @override
+  void dispose() {
+    registerButtonStreamController.close();
+    loginButtonStreamController.close();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -50,67 +80,77 @@ class _rNavBarState extends State<rNavBar> {
             SizedBox(
               width: mediaSize.width * 0.35,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  SizedBox(
-                    height: 35,
-                    width: mediaSize.width * 0.06,
-                    child: TextButton(
-                      onPressed: ()=>{},
-                      style: TextButton.styleFrom(
-                          backgroundColor: CustomTheme.buttonPrimary
-                      ),
-                      child: Center(
-                        child: Text(
-                            "O NAS",
-                            style: Constants.textStyle(
-                                textStyle: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white
-                                )
-                            )
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: SizedBox(
+                      height: 35,
+                      width: mediaSize.width * 0.06,
+                      child: TextButton(
+                        onPressed: ()=>{},
+                        style: TextButton.styleFrom(
+                            backgroundColor: CustomTheme.buttonPrimary
+                        ),
+                        child: Center(
+                          child: Text(
+                              "O NAS",
+                              style: Constants.textStyle(
+                                  textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white
+                                  )
+                              )
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 35,
-                    width: mediaSize.width * 0.06,
-                    child: TextButton(
-                      onPressed: ()=>{},
-                      style: TextButton.styleFrom(
-                          backgroundColor: CustomTheme.buttonPrimary
-                      ),
-                      child: Center(
-                        child: Text(
-                            "ARTYKUŁY",
-                            style: Constants.textStyle(
-                                textStyle: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white
-                                )
-                            )
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: SizedBox(
+                      height: 35,
+                      width: mediaSize.width * 0.06,
+                      child: TextButton(
+                        onPressed: ()=>{},
+                        style: TextButton.styleFrom(
+                            backgroundColor: CustomTheme.buttonPrimary
+                        ),
+                        child: Center(
+                          child: Text(
+                              "ARTYKUŁY",
+                              style: Constants.textStyle(
+                                  textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white
+                                  )
+                              )
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  FutureBuilder(
-                    future: getSessionKey(),
+                  StreamBuilder(
+                    stream: registerButtonStreamController.stream,
                     builder: (context, snapshot){
                       if(snapshot.hasData){
-                        return SizedBox(
+                        return const SizedBox.shrink();
+                      }else{
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: SizedBox(
                             height: 35,
                             width: mediaSize.width * 0.06,
                             child: TextButton(
-                              onPressed: ()=>{},
+                              onPressed: ()=> RegisterPopup().showPopup(context),
                               style: TextButton.styleFrom(
                                   backgroundColor: CustomTheme.buttonPrimary
                               ),
                               child: Center(
                                 child: Text(
-                                    "MOJE PRZEPISY",
+                                    "ZAREJESTRUJ",
                                     style: Constants.textStyle(
                                         textStyle: const TextStyle(
                                             fontSize: 12,
@@ -121,80 +161,53 @@ class _rNavBarState extends State<rNavBar> {
                                 ),
                               ),
                             ),
-                          );
-                      }else{
-                        return SizedBox(
-                          height: 35,
-                          width: mediaSize.width * 0.06,
-                          child: TextButton(
-                            onPressed: ()=>{},
-                            style: TextButton.styleFrom(
-                                backgroundColor: CustomTheme.buttonPrimary
-                            ),
-                            child: Center(
-                              child: Text(
-                                  "ZAREJESTRUJ",
-                                  style: Constants.textStyle(
-                                      textStyle: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white
-                                      )
-                                  )
-                              ),
-                            ),
                           ),
                         );}}
                   ),
-                  FutureBuilder(
-                    future: getSessionKey(),
+                  StreamBuilder(
+                    stream: loginButtonStreamController.stream,
                     builder: (context, snapshot){
                       if(snapshot.hasData){
-                        return SizedBox(
-                          height: 35,
-                          width: mediaSize.width * 0.06,
-                          child: TextButton(
-                            onPressed: ()=> {},
-                            style: TextButton.styleFrom(
-                                backgroundColor: CustomTheme.buttonSecondary
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 40, 0),
+                          child: Container(
+                            height: 35,
+                            width: mediaSize.width * 0.06,
+                            decoration: BoxDecoration(
+                              color: CustomTheme.buttonSecondary,
+                              borderRadius: const BorderRadius.all(Radius.circular(4))
                             ),
-                            child: Center(
-                              child: Text(
-                                  "USERNAME",
-                                  style: Constants.textStyle(
-                                      textStyle: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white
-                                      )
-                                  )
+                            child: CustomDropdown.buildDropdown(mediaSize, snapshot)
+                          ),
+                        );
+                      }else{
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 40, 0),
+                          child: SizedBox(
+                            height: 35,
+                            width: mediaSize.width * 0.06,
+                            child: TextButton(
+                              onPressed: ()=> LoginPopup().showPopup(context),
+                              style: TextButton.styleFrom(
+                                  backgroundColor: CustomTheme.buttonSecondary
+                              ),
+                              child: Center(
+                                child: Text(
+                                    "ZALOGUJ",
+                                    style: Constants.textStyle(
+                                        textStyle: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white
+                                        )
+                                    )
+                                ),
                               ),
                             ),
                           ),
                         );
-                      }else{
-                        return SizedBox(
-                            height: 35,
-                            width: mediaSize.width * 0.06,
-                            child: TextButton(
-                            onPressed: ()=> LoginPopup().showPopup(context),
-                            style: TextButton.styleFrom(
-                                backgroundColor: CustomTheme.buttonSecondary
-                            ),
-                            child: Center(
-                              child: Text(
-                                  "ZALOGUJ",
-                                  style: Constants.textStyle(
-                                      textStyle: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white
-                                      )
-                                  )
-                              ),
-                            ),
-                          ),
-                          );}}
+                      }
+                    }
                   ),
                 ],
               ),
@@ -206,63 +219,3 @@ class _rNavBarState extends State<rNavBar> {
   }
 }
 
-class Login {
-  Login();
-  static String? _login;
-  static String? _password;
-
-  static Widget _buildLogin(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            labelText: "Login użytkownika",
-            labelStyle: TextStyle(
-            color: CustomTheme.art4
-          )),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Login nie może być pusty';
-            }
-            if(!RegExp(r"^[a-z0-9]*$").hasMatch(value)) {
-              return 'Login może zawierać tylko małe litery i cyfry';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _login = value;
-          },
-        ),
-      ),
-    );
-  }
-  static Widget _buildPassword(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          obscureText: true,
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Hasło użytkownika",
-              labelStyle: TextStyle(
-              color: CustomTheme.art4
-          )),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Hasło nie może być puste';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _password = value;
-          },
-        ),
-      ),
-    );
-  }
-}

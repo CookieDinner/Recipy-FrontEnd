@@ -3,6 +3,7 @@ import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Views/Home.dart';
 import 'package:recipy/Views/Page404.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async{
   runApp(const RecipyApp());
@@ -20,7 +21,8 @@ class RecipyApp extends StatelessWidget{
         '/' : (context) => Home(),
       },
       onUnknownRoute: (settings) => NoAnimationRoute(
-          builder: (context) => const Page404()),
+          builder: (context) => const Page404()
+      ),
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
@@ -45,6 +47,12 @@ class RecipyApp extends StatelessWidget{
           ),
         )
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate
+      ],
+      supportedLocales: const [
+        Locale('pl')
+      ],
     );
   }
 

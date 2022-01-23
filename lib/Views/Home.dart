@@ -67,7 +67,6 @@ class _HomeState extends State<Home> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 30,),
                       Stack(
                         children: [
                           SizedBox(
@@ -144,7 +143,7 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          rNavBar(key: UniqueKey(),),
+          rNavBar(),
         ],
       ),
     );
