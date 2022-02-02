@@ -6,7 +6,7 @@ import 'dart:html' as html;
 
 class CustomDropdown {
   CustomDropdown();
-  static Widget buildDropdown(Size mediaSize, AsyncSnapshot<Object?> snapshot){
+  static Widget buildDropdown(BuildContext context, Size mediaSize, AsyncSnapshot<Object?> snapshot){
     return DropdownButtonHideUnderline(
       child: DropdownButton<Function>(
         itemHeight: 64,
@@ -17,7 +17,7 @@ class CustomDropdown {
         items: [
           DropdownMenuItem(
             value: (){
-              debugPrint("your mom");
+              Navigator.of(context).pushNamed('/twoje_artykuly');
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

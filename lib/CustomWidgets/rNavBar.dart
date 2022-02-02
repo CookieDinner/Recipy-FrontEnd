@@ -29,11 +29,6 @@ class _rNavBarState extends State<rNavBar> {
   StreamController<bool> registerButtonStreamController = StreamController<bool>();
   StreamController<String> loginButtonStreamController = StreamController<String>();
 
-  Future<String?> getAccessToken() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? accessToken = prefs.getString("accessToken");
-    return accessToken;
-  }
   Future<String?> getUserData() async{
     String userData = await Requests.getUserData();
     return userData;
@@ -42,7 +37,7 @@ class _rNavBarState extends State<rNavBar> {
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-      String? accessToken = await getAccessToken();
+      String? accessToken = await Utilities.getAccessToken();
       if (accessToken != null){
         String? userData = await getUserData();
         String username = jsonDecode(userData!)["username"];
@@ -177,7 +172,7 @@ class _rNavBarState extends State<rNavBar> {
                               color: CustomTheme.buttonSecondary,
                               borderRadius: const BorderRadius.all(Radius.circular(4))
                             ),
-                            child: CustomDropdown.buildDropdown(mediaSize, snapshot)
+                            child: CustomDropdown.buildDropdown(context, mediaSize, snapshot)
                           ),
                         );
                       }else{

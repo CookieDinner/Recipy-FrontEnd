@@ -8,7 +8,6 @@ import 'package:recipy/Utilities/Requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPopup{
-
   void showPopup(BuildContext context){
     Login login = Login();
     final _loginFormKey = GlobalKey<FormState>();
@@ -23,7 +22,7 @@ class LoginPopup{
                   contentPadding: EdgeInsets.zero,
                   backgroundColor: CustomTheme.secondaryBackground,
                   content: SizedBox(
-                    height: 450,
+                    height: 390,
                     width: 450,
                     child: Column(
                       children: [
@@ -84,7 +83,7 @@ class LoginPopup{
                                             setState((){
                                               showUserNotFoundError = true;
                                             });
-                                          }else {
+                                          }else if (token != "connfailed" || token != "conntimeout" || token != "httpexception"){
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString("accessToken", token);
                                             html.window.location.reload();
@@ -111,7 +110,6 @@ class LoginPopup{
         });
   }
 }
-
 class Login {
   Login();
   static String? _login;

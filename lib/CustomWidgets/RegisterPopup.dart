@@ -26,7 +26,7 @@ class RegisterPopup{
                   contentPadding: EdgeInsets.zero,
                   backgroundColor: CustomTheme.secondaryBackground,
                   content: SizedBox(
-                    height: success ? 300 : 800,
+                    height: success ? 300 : 710,
                     width: 450,
                     child: Column(
                       children: [
@@ -315,7 +315,7 @@ class Register {
               }
           ).then((value) {
             if(value != null) {
-              datePickerController.text = DateFormat('dd-MM-yyyy').format(value).toString();
+              datePickerController.text = DateFormat('MM-dd-yyyy').format(value).toString();
             }
           }),
           readOnly: true,

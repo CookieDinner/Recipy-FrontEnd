@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
+import 'package:recipy/Utilities/Requests.dart';
+import 'package:recipy/Views/AddArticle.dart';
 import 'package:recipy/Views/Home.dart';
 import 'package:recipy/Views/Page404.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
   runApp(const RecipyApp());
 }
 
@@ -19,6 +24,7 @@ class RecipyApp extends StatelessWidget{
       debugShowCheckedModeBanner: false,
       routes: {
         '/' : (context) => Home(),
+        '/twoje_artykuly' : (context) => AddArticle(),
       },
       onUnknownRoute: (settings) => NoAnimationRoute(
           builder: (context) => const Page404()

@@ -17,5 +17,8 @@ class CustomTheme{
   static Color art3 = const Color(0xFFB39E99);
   static Color art4 = const Color(0xFF989090);
 
+  static Color newestArticlesBackground = const Color(0xFFC1C1C2);
+  static Color singleNewArticleBackgrond = const Color(0xFFBAB5B5);
+
   static Color iconSelectedFill = const Color(0xFF866051);
 }

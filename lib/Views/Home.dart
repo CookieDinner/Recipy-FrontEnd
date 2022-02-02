@@ -1,13 +1,20 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recipy/CustomWidgets/Editor.dart';
+import 'package:recipy/CustomWidgets/NewestArticles.dart';
 import 'package:recipy/CustomWidgets/RecommendedArticles.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
 import 'package:recipy/CustomWidgets/rNavBar.dart';
+import 'package:recipy/Entities/Article.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
+import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
@@ -19,6 +26,33 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  StreamController<bool> recommendedArticlesStreamController = StreamController<bool>();
+  List<Article> recommendedArticles = [];
+  StreamController<bool> newestArticlesStreamController = StreamController<bool>();
+  List<Article> newestArticles = [];
+
+  Future<void> getRecommendedArticles() async{
+    String response = await Requests.getRecommendedArticles();
+    setState(() {
+      recommendedArticles = Constants().articles;
+    });
+    recommendedArticlesStreamController.add(true);
+  }
+  Future<void> getNewestArticles() async{
+    String response = await Requests.getArticles(sort: "newest");
+    setState(() {
+      newestArticles = Constants().articles + Constants().articles + Constants().articles + [Constants().articles[0]];
+    });
+    newestArticlesStreamController.add(true);
+  }
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async{
+      await getRecommendedArticles();
+      await getNewestArticles();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +131,6 @@ class _HomeState extends State<Home> {
                       ),
                       Waves(color1: CustomTheme.accent1, color2: CustomTheme.secondaryBackground,),
                       Container(
-                        height: mediaSize.width * 0.35,
                         width: mediaSize.width,
                         color: CustomTheme.secondaryBackground,
                         child: Column(
@@ -112,12 +145,69 @@ class _HomeState extends State<Home> {
                               )
                             ),),
                             const SizedBox(height: 40,),
-                            RecommendedArticles(mediaSize),
+                            StreamBuilder(
+                                stream: recommendedArticlesStreamController.stream,
+                                builder: (context, snapshot){
+                                  if(!snapshot.hasData){
+                                    return SizedBox(
+                                      height: mediaSize.width * 0.25,
+                                      width: mediaSize.width * 0.55,
+                                      child: const Center(
+                                        child: SpinKitFadingCircle(
+                                          size: 80,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    );
+                                  }else{
+                                    return RecommendedArticles(mediaSize, recommendedArticles);
+                                  }
+                                }
+                            ),
+                            const SizedBox(height: 60,),
                           ],
                         ),
                       ),
                       Waves(color1: CustomTheme.secondaryBackground, color2: CustomTheme.accent2,),
                       Waves(color1: CustomTheme.accent2, color2: CustomTheme.tertiaryBackground,),
+                      Container(
+                        width: mediaSize.width,
+                        color: CustomTheme.tertiaryBackground,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 40,),
+                            Text("Nowe artykuły", style: Constants.textStyle(
+                                textStyle: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w400,
+                                    color: CustomTheme.text
+                                )
+                            ),),
+                            const SizedBox(height: 40,),
+                            StreamBuilder(
+                                stream: newestArticlesStreamController.stream,
+                                builder: (context, snapshot){
+                                  if(!snapshot.hasData){
+                                    return SizedBox(
+                                      height: mediaSize.width * 0.42,
+                                      width: mediaSize.width * 0.55,
+                                      child: const Center(
+                                        child: SpinKitFadingCircle(
+                                          size: 80,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    );
+                                  }else{
+                                    return NewestArticles(mediaSize, newestArticles);
+                                  }
+                                }
+                            ),
+                            const SizedBox(height: 60,),
+                          ],
+                        ),
+                      ),
                       Container(
                         height: 60,
                         child: Card(

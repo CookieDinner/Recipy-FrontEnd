@@ -1,13 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recipy/Entities/Article.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
+import 'package:recipy/Utilities/Utilities.dart';
 
 class RecommendedArticles extends StatefulWidget {
   final Size mediaSize;
-  const RecommendedArticles(this.mediaSize, {Key? key}) : super(key: key);
+  final List<Article> articles;
+  const RecommendedArticles(this.mediaSize, this.articles, {Key? key}) : super(key: key);
 
   @override
   _RecommendedArticlesState createState() => _RecommendedArticlesState();
@@ -26,7 +31,7 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
             width: widget.mediaSize.width * 0.55,
             child: CarouselSlider.builder(
               carouselController: carouselController,
-              itemCount: 5,
+              itemCount: widget.articles.length,
               options: CarouselOptions(
                   initialPage: 0,
                   viewportFraction: 1,
@@ -53,28 +58,44 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
                         children: [
                           Row(
                             children: [
-                              Text("Data: ", style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: CustomTheme.textDark)),),
-                              Text("null", style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
+                              Text("Autor: ", style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: CustomTheme.textDark)),),
+                              Text(widget.articles[index].author, style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
                             ],
                           ),
                           const SizedBox(height: 10,),
                           Row(
                             children: [
-                              Text("Autor: ", style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: CustomTheme.textDark)),),
-                              Text("null", style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
+                              Text("Data: ", style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: CustomTheme.textDark)),),
+                              Text(widget.articles[index].date, style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
                             ],
                           ),
                           const SizedBox(height: 10,),
-                          Text("Jak poznałem buraki ", style: Constants.textStyle(textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: CustomTheme.textDark)),),
+                          Row(
+                            children: [
+                              Text("Ocena: ", style: Constants.textStyle(textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: CustomTheme.textDark)),),
+                              RatingBarIndicator(
+                                rating: widget.articles[index].rating,
+                                  itemBuilder: (context, _){
+                                    return FaIcon(
+                                      FontAwesomeIcons.breadSlice,
+                                      color: CustomTheme.textDark.withOpacity(0.8)
+                                    );
+                                  },
+                                itemCount: 5,
+                                itemSize: 16,
+                                itemPadding: const EdgeInsets.fromLTRB(0, 0, 3, 0),
+                                unratedColor: CustomTheme.art2,
+                              ),
+                              Text(" (" + widget.articles[index].rating.toStringAsFixed(2) + ")", style: Constants.textStyle(textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
+                            ],
+                          ),
+                          const SizedBox(height: 10,),
+                          Text(widget.articles[index].title, style: Constants.textStyle(textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: CustomTheme.textDark)),),
                           const SizedBox(height: 10,),
                           SizedBox(
                             height: 200,
                             width: 450,
-                            child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-                                "Mauris vitae mi efficitur, accumsan tortor sit amet, semper justo. "
-                                "Vivamus dignissim elit at posuere vulputate. "
-                                "Pellentesque euismod et neque a ornare. "
-                                "Maecenas ultrices odio vitae metus laoreet, ut pharetra neque congue. [...]",
+                            child: Text(Utilities.decodeEditorText(widget.articles[index].content).substring(0, 480) + " (...)",
                               style: Constants.textStyle(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),),
                           ),
                         ],
@@ -95,24 +116,14 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
                               SizedBox(
                                 height: 150,
                                 width: 180,
-                                child: Center(child: Text("Buraki na twardo", style: Constants.textStyle(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: CustomTheme.textDark)),)),
+                                child: Center(child: Text(widget.articles[index].recipe.title, style: Constants.textStyle(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: CustomTheme.textDark)),textAlign: TextAlign.center,)),
                               ),
-                              SizedBox(
-                                width: 150,
-                                height: 50,
-                                child: Center(
-                                  child: Text(
-                                      "Zaloguj się, \naby zapisać przepis",
-                                      textAlign: TextAlign.center,
-                                      style: Constants.textStyle(
-                                          textStyle: TextStyle(
-                                              overflow: TextOverflow.clip,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: CustomTheme.textDark
-                                          )
-                                      )
-                                  ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(165, 40, 0, 0),
+                                child: FaIcon(
+                                  FontAwesomeIcons.utensils,
+                                  color: CustomTheme.textDark.withOpacity(0.7),
+                                  size: 30,
                                 ),
                               )
                             ],
@@ -168,7 +179,7 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 DotsIndicator(
-                  dotsCount: 5,
+                  dotsCount: widget.articles.length,
                   position: _pageIndex,
                   decorator: DotsDecorator(
                     color: CustomTheme.secondaryBackground,

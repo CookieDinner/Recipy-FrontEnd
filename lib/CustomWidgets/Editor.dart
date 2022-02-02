@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:tuple/tuple.dart';
 
@@ -12,12 +15,18 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  QuillController _quillController = QuillController.basic();
+
+  String jsonText = jsonEncode([{"insert":"Lorem ipsum dolor sit amet","attributes":{"bold":true,"underline":true}},{"insert":"\n","attributes":{"header":1,"indent":22}},{"insert":"Consectetur adipiscing elit. Pellentesque congue odio vitae aliquet elementum. Nullam posuere nibh sapien, in suscipit lorem pellentesque at. Aliquam scelerisque nisi ex, efficitur tempus mauris fermentum sed. Nulla facilisi. Praesent urna tortor, fermentum id dolor in, cursus gravida urna. Maecenas in pretium massa. Donec in malesuada ligula. Donec faucibus libero ac arcu ultricies pulvinar. Nunc lobortis, odio sed consequat vulputate, velit tellus elementum justo, a varius velit est a sem. Sed nec scelerisque massa. In volutpat sollicitudin nibh. Proin pharetra","attributes":{"color":"#004d40"}},{"insert":" congue tempus. Curabitur facilisis eli","attributes":{"color":"#004d40","background":"#f44336","strike":true}},{"insert":"t vel hendrerit elementum. Praesent ultrices consequat luctus. Etiam mattis est nec enim facilisis ornare. Cras elementum, neque quis commodo condimentum, lacus erat bibendum massa, ac viverra ante sapien nec lorem.","attributes":{"color":"#004d40"}},{"insert":"\n"}]);
+  String jsonTextTest = "[{\"insert\":\"Lorem ipsum dolor sit amet\",\"attributes\":{\"bold\":true,\"underline\":true}},{\"insert\":\"\\n\",\"attributes\":{\"header\":1,\"indent\":22}},{\"insert\":\"Consectetur adipiscing elit. Pellentesque congue odio vitae aliquet elementum. Nullam posuere nibh sapien, in suscipit lorem pellentesque at. Aliquam scelerisque nisi ex, efficitur tempus mauris fermentum sed. Nulla facilisi. Praesent urna tortor, fermentum id dolor in, cursus gravida urna. Maecenas in pretium massa. Donec in malesuada ligula. Donec faucibus libero ac arcu ultricies pulvinar. Nunc lobortis, odio sed consequat vulputate, velit tellus elementum justo, a varius velit est a sem. Sed nec scelerisque massa. In volutpat sollicitudin nibh. Proin pharetra\",\"attributes\":{\"color\":\"#004d40\"}},{\"insert\":\" congue tempus. Curabitur facilisis eli\",\"attributes\":{\"color\":\"#004d40\",\"background\":\"#f44336\",\"strike\":true}},{\"insert\":\"t vel hendrerit elementum. Praesent ultrices consequat luctus. Etiam mattis est nec enim facilisis ornare. Cras elementum, neque quis commodo condimentum, lacus erat bibendum massa, ac viverra ante sapien nec lorem.\",\"attributes\":{\"color\":\"#004d40\"}},{\"insert\":\"\\n\"}]";
   final FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
+    var json = jsonDecode(jsonTextTest);
+    quill.QuillController _quillController = quill.QuillController(
+        document: quill.Document.fromJson(json),
+        selection: TextSelection.collapsed(offset: 0));
     return Container(
-      color: CustomTheme.tertiaryBackground,
+      color: CustomTheme.secondaryBackground,
       height: 900,
       width: widget.mediaSize.width,
       child: SizedBox(
@@ -25,14 +34,14 @@ class _EditorState extends State<Editor> {
         width: 1000,
         child: Column(
           children: [
-            QuillToolbar.basic(
+            quill.QuillToolbar.basic(
               controller: _quillController,
               locale: const Locale('en'),
               showImageButton: false,
               showVideoButton: false,
               showCodeBlock: false,
               showInlineCode: false,
-              iconTheme: QuillIconTheme(
+              iconTheme: quill.QuillIconTheme(
                   disabledIconColor: Colors.black26,
                   iconUnselectedFillColor: CustomTheme.accent2,
                   iconUnselectedColor: CustomTheme.textDark,
@@ -51,18 +60,19 @@ class _EditorState extends State<Editor> {
                 ),
                 height: 800,
                 width: 1200,
-                child: QuillEditor(
+                child: quill.QuillEditor(
                     controller: _quillController,
                     scrollController: ScrollController(),
                     scrollable: true,
                     focusNode: _focusNode,
                     autoFocus: false,
-                    readOnly: false,
-                    placeholder: 'Add content',
+                    readOnly: true,
+                    showCursor: false,
+                    placeholder: 'Dodaj tekst artykułu...',
                     expands: false,
                     padding: EdgeInsets.zero,
-                    customStyles: DefaultStyles(
-                      h1: DefaultTextBlockStyle(
+                    customStyles: quill.DefaultStyles(
+                      h1: quill.DefaultTextBlockStyle(
                           const TextStyle(
                             fontSize: 32,
                             color: Colors.black,
@@ -74,7 +84,25 @@ class _EditorState extends State<Editor> {
                           null),
                       sizeSmall: const TextStyle(fontSize: 9),
                     ))
-            )
+            ),
+            TextButton(
+              onPressed: ()=> debugPrint(jsonEncode(_quillController.document.toDelta().toJson())),
+              style: TextButton.styleFrom(
+                  backgroundColor: CustomTheme.buttonSecondary
+              ),
+              child: Center(
+                child: Text(
+                    "ZALOGUJ",
+                    style: Constants.textStyle(
+                        textStyle: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white
+                        )
+                    )
+                ),
+              ),
+            ),
           ],
         ),
       ),

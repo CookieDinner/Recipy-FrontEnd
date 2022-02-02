@@ -104,4 +104,93 @@ class Requests{
       return "httpexception";
     }
   }
+  static Future<String> sendArticle() async {
+    String jsonText = jsonEncode([{"insert":"Lorem ipsum dolor sit amet","attributes":{"bold":true,"underline":true}},{"insert":"\n","attributes":{"header":1,"indent":22}},{"insert":"Consectetur adipiscing elit. Pellentesque congue odio vitae aliquet elementum. Nullam posuere nibh sapien, in suscipit lorem pellentesque at. Aliquam scelerisque nisi ex, efficitur tempus mauris fermentum sed. Nulla facilisi. Praesent urna tortor, fermentum id dolor in, cursus gravida urna. Maecenas in pretium massa. Donec in malesuada ligula. Donec faucibus libero ac arcu ultricies pulvinar. Nunc lobortis, odio sed consequat vulputate, velit tellus elementum justo, a varius velit est a sem. Sed nec scelerisque massa. In volutpat sollicitudin nibh. Proin pharetra","attributes":{"color":"#004d40"}},{"insert":" congue tempus. Curabitur facilisis eli","attributes":{"color":"#004d40","background":"#f44336","strike":true}},{"insert":"t vel hendrerit elementum. Praesent ultrices consequat luctus. Etiam mattis est nec enim facilisis ornare. Cras elementum, neque quis commodo condimentum, lacus erat bibendum massa, ac viverra ante sapien nec lorem.","attributes":{"color":"#004d40"}},{"insert":"\n"}]);
+    try {
+      String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJhZG1pbiI6ImZhbHNlIn0.sL6VKt8NA24Kod8BoqzlEJ46MoUTi3Cq5q5mHPm_tRc";
+      http.Response response = await http.put(
+          Uri.parse(Constants.articleAPI),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-access-token' : accessToken
+          },
+        body: jsonEncode({
+          "article_title" : "Testowy artykuł2",
+          "article_content" : jsonText,
+          "recipe_title" : "Testowy przepis",
+          "recipe_content" : "Testowy content przepisu",
+          "category" : "Obiady",
+          "publication_date" : "2021-08-09"
+        })
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        return response.body;
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> getArticles({var filter, var sort, var search_title, var search_author}) async {
+    // try {
+    //   http.Response response = await http.get(
+    //       Uri.parse(Constants.articleAPI),
+    //       headers: <String, String>{
+    //         'Content-Type': 'application/json; charset=UTF-8',
+    //         'x-access-token' : accessToken
+    //       },
+    //   ).timeout(const Duration(seconds: Constants.timeoutTime));
+    //   if (response.statusCode == 401){
+    //     return "NotFound";
+    //   }else{
+    //     return response.body;
+    //   }
+    // }on SocketException{
+    //   debugPrint("Connection failed");
+    //   return "connfailed";
+    // }on TimeoutException{
+    //   debugPrint("Timeout");
+    //   return "conntimeout";
+    // }on HttpException{
+    //   debugPrint("Http Exception");
+    //   return "httpexception";
+    // }
+    return "yes";
+  }
+  static Future<String> getRecommendedArticles() async {
+    // try {
+    //   http.Response response = await http.get(
+    //       Uri.parse(Constants.articleAPI),
+    //       headers: <String, String>{
+    //         'Content-Type': 'application/json; charset=UTF-8',
+    //         'x-access-token' : accessToken
+    //       },
+    //   ).timeout(const Duration(seconds: Constants.timeoutTime));
+    //   if (response.statusCode == 401){
+    //     return "NotFound";
+    //   }else{
+    //     return response.body;
+    //   }
+    // }on SocketException{
+    //   debugPrint("Connection failed");
+    //   return "connfailed";
+    // }on TimeoutException{
+    //   debugPrint("Timeout");
+    //   return "conntimeout";
+    // }on HttpException{
+    //   debugPrint("Http Exception");
+    //   return "httpexception";
+    // }
+    return "yes";
+  }
+
 }
