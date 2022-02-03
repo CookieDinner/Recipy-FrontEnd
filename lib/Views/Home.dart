@@ -12,6 +12,7 @@ import 'package:recipy/CustomWidgets/RecommendedArticles.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
 import 'package:recipy/CustomWidgets/rNavBar.dart';
 import 'package:recipy/Entities/Article.dart';
+import 'package:recipy/Entities/Recipe.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
@@ -32,17 +33,21 @@ class _HomeState extends State<Home> {
   List<Article> newestArticles = [];
 
   Future<void> getRecommendedArticles() async{
-    String response = await Requests.getRecommendedArticles();
-    setState(() {
-      recommendedArticles = Constants().articles;
-    });
+    String response = await Requests.getArticles(sort: "oldest", amount: 5);
+    for (Map<String, dynamic> article in jsonDecode(response)["data"]) {
+      String recipeResponse = await Requests.getRecipe(id: article["recipe_id"]);
+      Article parsedArticle = Article.fromMaps(article, jsonDecode(recipeResponse));
+      recommendedArticles.add(parsedArticle);
+    }
     recommendedArticlesStreamController.add(true);
   }
   Future<void> getNewestArticles() async{
-    String response = await Requests.getArticles(sort: "newest");
-    setState(() {
-      newestArticles = Constants().articles + Constants().articles + Constants().articles + [Constants().articles[0]];
-    });
+    String response = await Requests.getArticles(sort: "newest", amount: 7);
+    for (Map<String, dynamic> article in jsonDecode(response)["data"]) {
+      String recipeResponse = await Requests.getRecipe(id: article["recipe_id"]);
+      Article parsedArticle = Article.fromMaps(article, jsonDecode(recipeResponse));
+      newestArticles.add(parsedArticle);
+    }
     newestArticlesStreamController.add(true);
   }
   @override
