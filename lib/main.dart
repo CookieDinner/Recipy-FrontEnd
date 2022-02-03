@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Views/AddArticle.dart';
@@ -7,9 +10,9 @@ import 'package:recipy/Views/Page404.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:intl/intl.dart';
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
   runApp(const RecipyApp());
 }
@@ -17,18 +20,12 @@ void main() async{
 class RecipyApp extends StatelessWidget{
   const RecipyApp({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/' : (context) => Home(),
-        '/twoje_artykuly' : (context) => AddArticle(),
-      },
-      onUnknownRoute: (settings) => NoAnimationRoute(
-          builder: (context) => const Page404()
-      ),
+      home: Home(),
+      navigatorObservers: [NavigationHistoryObserver()],
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(

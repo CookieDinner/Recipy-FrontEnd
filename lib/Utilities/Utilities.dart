@@ -30,4 +30,10 @@ class Utilities{
     String? accessToken = prefs.getString("accessToken");
     return accessToken;
   }
+
+  static Future<String?> getUsername() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString("username");
+    return username;
+  }
 }

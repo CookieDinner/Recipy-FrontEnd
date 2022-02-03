@@ -140,31 +140,54 @@ class Requests{
     }
   }
 
-  static Future<String> getArticles({var filter, var sort, var search_title, var search_author}) async {
-    // try {
-    //   http.Response response = await http.get(
-    //       Uri.parse(Constants.articleAPI),
-    //       headers: <String, String>{
-    //         'Content-Type': 'application/json; charset=UTF-8',
-    //         'x-access-token' : accessToken
-    //       },
-    //   ).timeout(const Duration(seconds: Constants.timeoutTime));
-    //   if (response.statusCode == 401){
-    //     return "NotFound";
-    //   }else{
-    //     return response.body;
-    //   }
-    // }on SocketException{
-    //   debugPrint("Connection failed");
-    //   return "connfailed";
-    // }on TimeoutException{
-    //   debugPrint("Timeout");
-    //   return "conntimeout";
-    // }on HttpException{
-    //   debugPrint("Http Exception");
-    //   return "httpexception";
-    // }
-    return "yes";
+  static Future<String> getArticles({var filter, var sort, var search_title, var search_author, var amount, var start}) async {
+    try {
+      String params = "" +
+          (filter != null ? "filter="+filter.toString()+"&" : "") +
+          (sort != null ? "sort="+sort.toString()+"&" : "") +
+          (search_title != null ? "search_title="+search_title.toString()+"&" : "") +
+          (search_author != null ? "search_author="+search_author.toString()+"&" : "") +
+          (amount != null ? "amount="+amount.toString()+"&" : "") +
+          (start != null ? "start="+start.toString()+"&" : "");
+      http.Response response = await http.get(
+          Uri.parse("${Constants.getArticlesAPI}?$params"),
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        return response.body;
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+  static Future<String> getRecipe({required int id}) async {
+    try {
+      http.Response response = await http.get(
+        Uri.parse("${Constants.getRecipeAPI}/$id"),
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        return response.body;
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
   }
   static Future<String> getRecommendedArticles() async {
     // try {

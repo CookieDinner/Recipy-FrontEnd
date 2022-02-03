@@ -4,6 +4,8 @@ import 'package:recipy/Entities/Article.dart';
 import 'package:recipy/Entities/Recipe.dart';
 
 class Constants {
+
+
   static const int timeoutTime = 10;
   static const String apiRoot = "https://recipython.herokuapp.com";
   static const String loginAPI =  "$apiRoot/login";
@@ -11,6 +13,7 @@ class Constants {
   static const String myDataAPI =  "$apiRoot/me";
   static const String articleAPI = "$apiRoot/article";
   static const String getArticlesAPI = "$apiRoot/articles";
+  static const String getRecipeAPI = "$apiRoot/recipe";
   static TextStyle textStyle({TextStyle? textStyle}){
     return GoogleFonts.ptSans(textStyle: textStyle);
   }

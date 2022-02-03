@@ -45,6 +45,10 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
                   }
               ),
               itemBuilder: (BuildContext context, int index, int pageViewIndex){
+                String parsedContent = Utilities.decodeEditorText(widget.articles[index].content);
+                if (parsedContent.length > 481){
+                  parsedContent = parsedContent.substring(0, 480);
+                }
                 return Container(
                   color: CustomTheme.art1,
                   height: widget.mediaSize.width * 0.25,
@@ -95,7 +99,7 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
                           SizedBox(
                             height: 200,
                             width: 450,
-                            child: Text(Utilities.decodeEditorText(widget.articles[index].content).substring(0, 480) + " (...)",
+                            child: Text(parsedContent + " (...)",
                               style: Constants.textStyle(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),),
                           ),
                         ],

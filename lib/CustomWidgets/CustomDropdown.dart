@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipy/Utilities/Constants.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
+import 'package:recipy/Views/AddArticle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:html' as html;
 
@@ -17,7 +19,7 @@ class CustomDropdown {
         items: [
           DropdownMenuItem(
             value: (){
-              Navigator.of(context).pushNamed('/twoje_artykuly');
+              Navigator.push(context, CustomRoute(AddArticle()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,6 +114,7 @@ class CustomDropdown {
               value: () async{
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove("accessToken");
+                prefs.remove("username");
                 html.window.location.reload();
               },
               child: Row(

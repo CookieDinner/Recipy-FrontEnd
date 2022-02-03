@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:recipy/CustomWidgets/CustomDropdown.dart';
 import 'package:recipy/CustomWidgets/LoginPopup.dart';
 import 'package:recipy/CustomWidgets/RegisterPopup.dart';
@@ -39,10 +40,21 @@ class _rNavBarState extends State<rNavBar> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       String? accessToken = await Utilities.getAccessToken();
       if (accessToken != null){
-        String? userData = await getUserData();
-        String username = jsonDecode(userData!)["username"];
-        loginButtonStreamController.add(username);
+        String? username = await Utilities.getUsername();
+        if (username != null){
+          loginButtonStreamController.add(username);
+        } else {
+          String? userData = await getUserData();
+          username = jsonDecode(userData!)["username"];
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("username", username!);
+          loginButtonStreamController.add(username);
+        }
         registerButtonStreamController.add(true);
+        // String? userData = await getUserData();
+        // //String username = jsonDecode(userData!)["username"];
+        // loginButtonStreamController.add(username);
+        // registerButtonStreamController.add(true);
       }
     });
     super.initState();
@@ -83,7 +95,9 @@ class _rNavBarState extends State<rNavBar> {
                       height: 35,
                       width: mediaSize.width * 0.06,
                       child: TextButton(
-                        onPressed: ()=>{},
+                        onPressed: ()=>{
+                          print(NavigationHistoryObserver().history)
+                        },
                         style: TextButton.styleFrom(
                             backgroundColor: CustomTheme.buttonPrimary
                         ),
