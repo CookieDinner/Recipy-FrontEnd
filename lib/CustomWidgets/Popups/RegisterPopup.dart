@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recipy/CustomWidgets/CustomTextbox.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'dart:html' as html;
@@ -13,8 +14,8 @@ class RegisterPopup{
   void showPopup(BuildContext context){
     String errorText = "";
     bool success = false;
-    Register register = Register();
     final _registerFormKey = GlobalKey<FormState>();
+    Register register = Register(_registerFormKey);
     bool isRegisterButtonDisabled = false;
     bool showError = false;
     showDialog(
@@ -140,7 +141,8 @@ class RegisterPopup{
 }
 
 class Register {
-  Register();
+  Register(this.formKey);
+  GlobalKey<FormState> formKey;
   static String? _login;
   static String? _password;
   static String? _email;
@@ -150,142 +152,83 @@ class Register {
   TextEditingController passwordController = TextEditingController();
 
   Widget _buildLogin(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Login",
-              labelStyle: TextStyle(
-                  color: CustomTheme.art4
-              )),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Login nie może być pusty';
-            }
-            if(!RegExp(r"^[a-z0-9]*$").hasMatch(value) || value.length > 19) {
-              return 'Tylko małe litery i cyfry oraz mniej niż 20 znaków';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _login = value;
-          },
-        ),
-      ),
+    return CustomTextbox(
+        formKey: formKey,
+        labelText: "Login",
+        validator: (value) {
+          if(value == null || value.isEmpty) {
+            return 'Login nie może być pusty';
+          }
+          if(!RegExp(r"^[a-z0-9]*$").hasMatch(value) || value.length > 19) {
+            return 'Tylko małe litery i cyfry oraz mniej niż 20 znaków';
+          }
+          return null;
+        },
+        onSaved: (value) => _login = value
     );
   }
   Widget _buildUsername(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Pseudonim",
-              labelStyle: TextStyle(
-                  color: CustomTheme.art4
-              )
-          ),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Pseudonim nie może być pusty';
-            }
-            if(!RegExp(r"^[a-zA-Z0-9]*$").hasMatch(value) || value.length > 11) {
-              return 'Tylko litery i cyfry oraz mniej niż 12 znaków';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _username = value;
-          },
-        ),
-      ),
+    return CustomTextbox(
+        formKey: formKey,
+        labelText: "Pseudonim",
+        validator: (value) {
+          if(value == null || value.isEmpty) {
+            return 'Pseudonim nie może być pusty';
+          }
+          if(!RegExp(r"^[a-zA-Z0-9]*$").hasMatch(value) || value.length > 11) {
+            return 'Tylko litery i cyfry oraz mniej niż 12 znaków';
+          }
+          return null;
+        },
+        onSaved: (value) => _username = value
     );
   }
   Widget _buildEmail(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Adres email",
-              labelStyle: TextStyle(
-                  color: CustomTheme.art4
-              )
-          ),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Email nie może być pusty';
-            }
-            if(!RegExp(r"(?:[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*|)@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])").hasMatch(value)) {
-              return 'Podany email jest niepoprawny';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _email = value;
-          },
-        ),
-      ),
+    return CustomTextbox(
+        formKey: formKey,
+        labelText: "Adres email",
+        validator: (value) {
+          if(value == null || value.isEmpty) {
+            return 'Email nie może być pusty';
+          }
+          if(!RegExp(r"(?:[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*|)@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])").hasMatch(value)) {
+            return 'Podany email jest niepoprawny';
+          }
+          return null;
+        },
+        onSaved: (value) => _email = value
     );
   }
   Widget _buildPassword(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          obscureText: true,
-          controller: passwordController,
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Hasło",
-              labelStyle: TextStyle(
-                  color: CustomTheme.art4
-              )),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Hasło nie może być puste';
-            }
-            return null;
-          },
-        ),
-      ),
+    return CustomTextbox(
+        formKey: formKey,
+        labelText: "Hasło",
+        obscured: true,
+        controller: passwordController,
+        validator: (value) {
+          if(value == null || value.isEmpty) {
+            return 'Hasło nie może być puste';
+          }
+          return null;
+        },
+        onSaved: (value){},
     );
   }
   Widget _buildConfirmPassword(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          obscureText: true,
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Powtórz hasło",
-              labelStyle: TextStyle(
-                  color: CustomTheme.art4
-              )),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Hasło nie może być puste';
-            }
-            if(value != passwordController.text){
-              return 'Podane hasła muszą się ze sobą zgadzać';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _password = value;
-          },
-        ),
-      ),
+    return CustomTextbox(
+        formKey: formKey,
+        labelText: "Powtórz hasło",
+        obscured: true,
+        validator: (value) {
+          if(value == null || value.isEmpty) {
+            return 'Hasło nie może być puste';
+          }
+          if(value != passwordController.text){
+            return 'Podane hasła muszą się ze sobą zgadzać';
+          }
+          return null;
+        },
+        onSaved: (value) => _password = value
     );
   }
   TextEditingController datePickerController = TextEditingController();
@@ -316,6 +259,7 @@ class Register {
           ).then((value) {
             if(value != null) {
               datePickerController.text = DateFormat('MM-dd-yyyy').format(value).toString();
+              formKey.currentState?.validate();
             }
           }),
           readOnly: true,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipy/CustomWidgets/Popups/ChangePasswordPopup.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
@@ -88,9 +89,7 @@ class CustomDropdown {
               )
           ),
           DropdownMenuItem(
-            value: (){
-              debugPrint("your mom");
-            },
+            value: () => ChangePasswordPopup().showPopup(context),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children:  [

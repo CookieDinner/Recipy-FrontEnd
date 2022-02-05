@@ -13,7 +13,9 @@ class Constants {
   static const String myDataAPI =  "$apiRoot/me";
   static const String articleAPI = "$apiRoot/article";
   static const String getArticlesAPI = "$apiRoot/articles";
+  static const String getRecommendedArticlesAPI = "$apiRoot/recommended";
   static const String getRecipeAPI = "$apiRoot/recipe";
+  static const String addIngredientAPI = "$apiRoot/ingredient";
   static TextStyle textStyle({TextStyle? textStyle}){
     return GoogleFonts.ptSans(textStyle: textStyle);
   }

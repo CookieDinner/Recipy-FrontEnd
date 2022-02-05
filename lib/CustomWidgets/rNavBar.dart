@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:recipy/CustomWidgets/CustomDropdown.dart';
-import 'package:recipy/CustomWidgets/LoginPopup.dart';
-import 'package:recipy/CustomWidgets/RegisterPopup.dart';
+import 'package:recipy/CustomWidgets/Popups/LoginPopup.dart';
+import 'package:recipy/CustomWidgets/Popups/RegisterPopup.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
@@ -46,8 +46,10 @@ class _rNavBarState extends State<rNavBar> {
         } else {
           String? userData = await getUserData();
           username = jsonDecode(userData!)["username"];
+          int id = jsonDecode(userData)["id"];
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString("username", username!);
+          prefs.setInt("userId", id);
           loginButtonStreamController.add(username);
         }
         registerButtonStreamController.add(true);
@@ -73,7 +75,7 @@ class _rNavBarState extends State<rNavBar> {
       child: Card(
         elevation: 5,
         color: CustomTheme.secondaryBackground,
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Row(
           children: [
             Padding(

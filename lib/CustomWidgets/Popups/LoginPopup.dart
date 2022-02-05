@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recipy/CustomWidgets/CustomTextbox.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'dart:html' as html;
@@ -9,8 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPopup{
   void showPopup(BuildContext context){
-    Login login = Login();
     final _loginFormKey = GlobalKey<FormState>();
+    Login login = Login(_loginFormKey);
     bool isLoginButtonDisabled = false;
     bool showUserNotFoundError = false;
     showDialog(
@@ -111,62 +112,44 @@ class LoginPopup{
   }
 }
 class Login {
-  Login();
+  Login(this.formKey);
+  GlobalKey<FormState> formKey;
   static String? _login;
   static String? _password;
 
   Widget _buildLogin(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Login użytkownika",
-              labelStyle: TextStyle(
-                  color: CustomTheme.art4
-              )),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Login nie może być pusty';
-            }
-            if(!RegExp(r"^[a-z0-9]*$").hasMatch(value) || value.length > 19) {
-              return 'Tylko małe litery i cyfry oraz mniej niż 20 znaków';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _login = value;
-          },
-        ),
-      ),
+    return CustomTextbox(
+        formKey: formKey,
+        labelText: "Login użytkownika",
+        validator: (value) {
+          if(value == null || value.isEmpty) {
+            return 'Login nie może być pusty';
+          }
+          if(!RegExp(r"^[a-z0-9]*$").hasMatch(value) || value.length > 19) {
+            return 'Tylko małe litery i cyfry oraz mniej niż 20 znaków';
+          }
+          return null;
+        },
+        onSaved: (value){
+          _login = value;
+        },
     );
   }
+
   Widget _buildPassword(){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: SizedBox(
-        height: 80,
-        child: TextFormField(
-          obscureText: true,
-          decoration: InputDecoration(
-              isDense: true,
-              labelText: "Hasło użytkownika",
-              labelStyle: TextStyle(
-                  color: CustomTheme.art4
-              )),
-          validator: (value) {
-            if(value == null || value.isEmpty) {
-              return 'Hasło nie może być puste';
-            }
-            return null;
-          },
-          onSaved: (value){
-            _password = value;
-          },
-        ),
-      ),
+    return CustomTextbox(
+        formKey: formKey,
+        labelText: "Hasło użytkownika",
+        obscured: true,
+        validator: (value) {
+          if(value == null || value.isEmpty) {
+            return 'Hasło nie może być puste';
+          }
+          return null;
+        },
+        onSaved: (value){
+          _password = value;
+        }
     );
   }
 }

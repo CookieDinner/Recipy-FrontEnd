@@ -77,6 +77,87 @@ class Requests{
     }
   }
 
+  static Future<String> patchPassword({required String password, required String new_password}) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int id = prefs.getInt("userId")!;
+      String accessToken = prefs.getString("accessToken")!;
+      http.Response response = await http.patch(
+          Uri.parse(Constants.userAPI+"/$id"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-access-token' : accessToken
+          },
+          body: jsonEncode({
+            "password" : password,
+            "new_password" : new_password
+          })
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 400){
+        switch (jsonDecode(response.body)["message"]){
+          case "Wrong password":
+            return "Podano błędne stare hasło";
+        }
+        return "Wystąpił nieoczekiwany błąd";
+      }else if (response.statusCode == 200){
+        return "Good";
+      }else{
+        return "Wystąpił nieoczekiwany błąd";
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "Wystąpił błąd z połączeniem";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "Przekroczono limit połączenia";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "Wystąpił błąd";
+    }
+  }
+
+  static Future<String> putIngredient({required String name, required double calories, required double fats, required double carbs, required double proteins, required String unit}) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString("accessToken")!;
+      http.Response response = await http.put(
+          Uri.parse(Constants.addIngredientAPI),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-access-token' : accessToken
+          },
+          body: jsonEncode({
+            "name" : name,
+            "calories" : calories.toString(),
+            "fats" : fats.toString(),
+            "carbs" : carbs.toString(),
+            "proteins" : proteins.toString(),
+            "unit" : unit
+          })
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 403){
+        switch (jsonDecode(response.body)["message"]){
+          case "Ingredient already exists":
+            return "Składnik istnieje już bazie wiedzy";
+        }
+        return "Wystąpił nieoczekiwany błąd";
+      }else if (response.statusCode == 201){
+        return "Good";
+      }else{
+        return "Wystąpił nieoczekiwany błąd";
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "Wystąpił błąd z połączeniem";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "Przekroczono limit połączenia";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "Wystąpił błąd";
+    }
+  }
+
   static Future<String> getUserData() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -168,6 +249,29 @@ class Requests{
       return "httpexception";
     }
   }
+
+  static Future<String> getRecommendedArticles() async {
+    try {
+      http.Response response = await http.get(
+        Uri.parse("${Constants.getRecommendedArticlesAPI}/5"),
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        return response.body;
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
   static Future<String> getRecipe({required int id}) async {
     try {
       http.Response response = await http.get(
@@ -188,32 +292,6 @@ class Requests{
       debugPrint("Http Exception");
       return "httpexception";
     }
-  }
-  static Future<String> getRecommendedArticles() async {
-    // try {
-    //   http.Response response = await http.get(
-    //       Uri.parse(Constants.articleAPI),
-    //       headers: <String, String>{
-    //         'Content-Type': 'application/json; charset=UTF-8',
-    //         'x-access-token' : accessToken
-    //       },
-    //   ).timeout(const Duration(seconds: Constants.timeoutTime));
-    //   if (response.statusCode == 401){
-    //     return "NotFound";
-    //   }else{
-    //     return response.body;
-    //   }
-    // }on SocketException{
-    //   debugPrint("Connection failed");
-    //   return "connfailed";
-    // }on TimeoutException{
-    //   debugPrint("Timeout");
-    //   return "conntimeout";
-    // }on HttpException{
-    //   debugPrint("Http Exception");
-    //   return "httpexception";
-    // }
-    return "yes";
   }
 
 }
