@@ -157,6 +157,7 @@ class ChangePassword{
   Widget _buildNewPassword(){
     return CustomTextbox(
         formKey: formKey,
+        maxLength: 64,
         labelText: "Nowe hasło",
         obscured: true,
         controller: newPasswordController,
@@ -172,6 +173,7 @@ class ChangePassword{
   Widget _buildRepeatNewPassword(){
     return CustomTextbox(
         formKey: formKey,
+        maxLength: 64,
         labelText: "Powtórz nowe hasło",
         obscured: true,
         validator: (value){

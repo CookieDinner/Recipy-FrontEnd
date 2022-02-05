@@ -155,12 +155,13 @@ class Register {
     return CustomTextbox(
         formKey: formKey,
         labelText: "Login",
+        maxLength: 20,
         validator: (value) {
           if(value == null || value.isEmpty) {
             return 'Login nie może być pusty';
           }
-          if(!RegExp(r"^[a-z0-9]*$").hasMatch(value) || value.length > 19) {
-            return 'Tylko małe litery i cyfry oraz mniej niż 20 znaków';
+          if(!RegExp(r"^[a-z0-9]*$").hasMatch(value)) {
+            return 'Tylko małe litery i cyfry';
           }
           return null;
         },
@@ -170,13 +171,14 @@ class Register {
   Widget _buildUsername(){
     return CustomTextbox(
         formKey: formKey,
+        maxLength: 12,
         labelText: "Pseudonim",
         validator: (value) {
           if(value == null || value.isEmpty) {
             return 'Pseudonim nie może być pusty';
           }
-          if(!RegExp(r"^[a-zA-Z0-9]*$").hasMatch(value) || value.length > 11) {
-            return 'Tylko litery i cyfry oraz mniej niż 12 znaków';
+          if(!RegExp(r"^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9]*$").hasMatch(value)) {
+            return 'Tylko litery i cyfry';
           }
           return null;
         },
@@ -187,6 +189,7 @@ class Register {
     return CustomTextbox(
         formKey: formKey,
         labelText: "Adres email",
+        maxLength: 128,
         validator: (value) {
           if(value == null || value.isEmpty) {
             return 'Email nie może być pusty';
@@ -203,6 +206,7 @@ class Register {
     return CustomTextbox(
         formKey: formKey,
         labelText: "Hasło",
+        maxLength: 64,
         obscured: true,
         controller: passwordController,
         validator: (value) {
@@ -217,6 +221,7 @@ class Register {
   Widget _buildConfirmPassword(){
     return CustomTextbox(
         formKey: formKey,
+        maxLength: 64,
         labelText: "Powtórz hasło",
         obscured: true,
         validator: (value) {

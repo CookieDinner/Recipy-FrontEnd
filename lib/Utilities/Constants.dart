@@ -20,6 +20,8 @@ class Constants {
     return GoogleFonts.ptSans(textStyle: textStyle);
   }
 
+  static const String polishLetters = r"ąćęłńóśźżĄĆĘŁŃÓŚŹŻ";
+
   List<Article> articles =
   [
     Article(id: 1, author_id: 1, author: "Banan69", category: "Obiady", title: "Testowy artykuł2", date: "2022-02-02", recipe: Recipe(rating: 5.0, content: 'Content przepisu tralalal buraki', title: 'Testowy przepis', user_id: 1, id: 1),

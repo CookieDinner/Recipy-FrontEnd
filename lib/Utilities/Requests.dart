@@ -138,7 +138,7 @@ class Requests{
       if (response.statusCode == 403){
         switch (jsonDecode(response.body)["message"]){
           case "Ingredient already exists":
-            return "Składnik istnieje już bazie wiedzy";
+            return "Składnik istnieje już w bazie wiedzy";
         }
         return "Wystąpił nieoczekiwany błąd";
       }else if (response.statusCode == 201){

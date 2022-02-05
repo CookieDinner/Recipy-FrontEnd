@@ -78,12 +78,15 @@ class _rNavBarState extends State<rNavBar> {
         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Row(
           children: [
-            Padding(
-              child: SizedBox(
-                width: mediaSize.width * 0.15,
-                child: Image.asset('assets/images/logoTight.png')
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                child: SizedBox(
+                  width: mediaSize.width * 0.15,
+                  child: Image.asset('assets/images/logoTight.png')
+                )
               ),
-              padding: const EdgeInsets.fromLTRB(20, 4, 0, 4),
             ),
             const Spacer(),
             SizedBox(
