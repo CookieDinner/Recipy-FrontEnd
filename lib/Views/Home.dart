@@ -34,10 +34,10 @@ class _HomeState extends State<Home> {
   List<Article> newestArticles = [];
 
   Future<void> getRecommendedArticles() async{
-    String response = await Requests.getArticles(sort: "oldest", amount: 5);
+    String response = await Requests.getRecommendedArticles();
     for (Map<String, dynamic> article in jsonDecode(response)["data"]) {
-      String recipeResponse = await Requests.getRecipe(id: article["recipe_id"]);
-      Article parsedArticle = Article.fromMaps(article, jsonDecode(recipeResponse));
+      //String recipeResponse = await Requests.getRecipe(id: article["recipe_id"]);
+      Article parsedArticle = Article.fromGeneric(article);
       recommendedArticles.add(parsedArticle);
     }
     recommendedArticlesStreamController.add(true);
@@ -45,8 +45,8 @@ class _HomeState extends State<Home> {
   Future<void> getNewestArticles() async{
     String response = await Requests.getArticles(sort: "newest", amount: 7);
     for (Map<String, dynamic> article in jsonDecode(response)["data"]) {
-      String recipeResponse = await Requests.getRecipe(id: article["recipe_id"]);
-      Article parsedArticle = Article.fromMaps(article, jsonDecode(recipeResponse));
+      //String recipeResponse = await Requests.getRecipe(id: article["recipe_id"]);
+      Article parsedArticle = Article.fromGeneric(article);
       newestArticles.add(parsedArticle);
     }
     newestArticlesStreamController.add(true);

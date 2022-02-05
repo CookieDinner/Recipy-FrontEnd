@@ -13,7 +13,7 @@ class Article{
   late final String content;
   late final Recipe recipe;
   Article({required this.id, required this.author_id, required this.author, required this.category, required this.title, required this.content, required this.recipe, required this.rating, required this.date});
-  Article.fromMaps(Map<String, dynamic> article, Map<String, dynamic> recipe){
+  Article.fromGeneric(Map<String, dynamic> article){
     id = article["id"];
     author_id = article["author_id"];
     author = article["author"];
@@ -22,10 +22,10 @@ class Article{
     category = article["category"];
     title = article["title"];
     content = article["content"];
-    this.recipe = parseRecipe(recipe);
-  }
-
-  Recipe parseRecipe(Map<String, dynamic> recipe) {
-    return Recipe(id: recipe["id"], user_id: recipe["user_id"], rating: recipe["rate"] ?? 0, title: recipe["title"], content: recipe["content"]);
+    recipe = Recipe(
+        user_id: article["author_id"],
+        title: article["recipe_title"],
+        content: article["recipe_content"]
+    );
   }
 }
