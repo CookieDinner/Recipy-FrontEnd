@@ -6,7 +6,7 @@ import 'package:recipy/Entities/Recipe.dart';
 class Constants {
 
 
-  static const int timeoutTime = 10;
+  static const int timeoutTime = 15;
   static const String apiRoot = "https://recipython.herokuapp.com";
   static const String loginAPI =  "$apiRoot/login";
   static const String userAPI =  "$apiRoot/user";
@@ -14,8 +14,11 @@ class Constants {
   static const String articleAPI = "$apiRoot/article";
   static const String getArticlesAPI = "$apiRoot/articles";
   static const String getRecommendedArticlesAPI = "$apiRoot/recommended";
+  static const String getArticleAPI = "$apiRoot/article";
   static const String getRecipeAPI = "$apiRoot/recipe";
   static const String addIngredientAPI = "$apiRoot/ingredient";
+  static const String getCategoriesAPI = "$apiRoot/categories";
+  static const String getIngredientsAPI = "$apiRoot/ingredients";
   static TextStyle textStyle({TextStyle? textStyle}){
     return GoogleFonts.ptSans(textStyle: textStyle);
   }
@@ -45,5 +48,4 @@ class Constants {
             "elementum. Praesent ultrices consequat luctus. Etiam mattis est nec enim facilisis ornare. Cras elementum, neque quis commodo condimentum, lacus erat bibendum "
             "massa, ac viverra ante sapien nec lorem.\",\"attributes\":{\"color\":\"#004d40\"}},{\"insert\":\"\\n\"}]", rating: 4.5),
   ];
-
 }

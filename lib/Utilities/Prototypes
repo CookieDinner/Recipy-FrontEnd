@@ -1,0 +1,66 @@
+
+Container(
+                                color: isHighlighted ? Colors.lightGreen : Colors.blueGrey,
+                                height: 200,
+                                width: 300,
+                                child: Stack(
+                                  children: [
+                                    DropzoneView(
+                                      onCreated: (controller) => imageController = controller,
+                                      onDrop: acceptFile,
+                                      cursor: CursorType.grab,
+                                      onLeave: () => setState(() {
+                                        isHighlighted = false;
+                                      }),
+                                      onHover: () => setState((){
+                                        isHighlighted = true;
+                                      }),
+                                    ),
+                                    Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.cloud_upload, size: 80, color: Colors.white,),
+                                          Text("Wrzuć plik tutaj", style: TextStyle(color: Colors.white),)
+                                        ],
+                                      )
+                                    )
+                                  ],
+                                )
+                              ),
+                              StreamBuilder(
+                                stream: imageStreamController.stream,
+                                builder: (context, snapshot) {
+                                  return Container(
+                                    height: 600,
+                                    width: 300,
+                                    child: ListView.builder(
+                                      itemCount: images.length,
+                                      itemBuilder: (context, index){
+                                        return Container(
+                                          height: 100,
+                                          child: Image.memory(images[index]),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                              ),
+
+Future acceptFile(dynamic event) async {
+    setState(() {
+      isHighlighted = false;
+    });
+    final name = await imageController.getFilename(event);
+    final bytes = await imageController.getFileData(event);
+    final size = await imageController.getFileSize(event);
+    if (size > 5000000) {
+      print("Podane zdjęcie jest za duże");
+    } else {
+      setState(() {
+        images.add(bytes);
+        imageStreamController.add(true);
+      });
+      print(size);
+    }
+  }

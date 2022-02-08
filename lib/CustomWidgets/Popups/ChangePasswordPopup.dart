@@ -1,11 +1,10 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:recipy/CustomWidgets/CustomTextbox.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:html' as html;
 
 class ChangePasswordPopup{
   void showPopup(BuildContext context){
@@ -158,7 +157,7 @@ class ChangePassword{
     return CustomTextbox(
         formKey: formKey,
         maxLength: 64,
-        labelText: "Nowe hasło",
+        labelText: "Nowe hasłoó",
         obscured: true,
         controller: newPasswordController,
         validator: (value){

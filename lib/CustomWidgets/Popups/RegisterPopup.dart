@@ -1,13 +1,10 @@
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:recipy/CustomWidgets/CustomTextbox.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
-import 'dart:html' as html;
-import 'package:intl/intl.dart';
-
 import 'package:recipy/Utilities/Requests.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPopup{
 
@@ -97,9 +94,6 @@ class RegisterPopup{
                                       ),
                                       onPressed: isRegisterButtonDisabled ? null : () async{
                                         if(_registerFormKey.currentState!.validate()){
-                                          setState(() {
-                                            isRegisterButtonDisabled = true;
-                                          });
                                           _registerFormKey.currentState!.save();
                                           String response = await Requests.putRegister(
                                               login: Register._login!,

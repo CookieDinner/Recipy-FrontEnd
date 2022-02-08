@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:recipy/CustomWidgets/CustomDropdown.dart';
 import 'package:recipy/CustomWidgets/Popups/LoginPopup.dart';
 import 'package:recipy/CustomWidgets/Popups/RegisterPopup.dart';
 import 'package:recipy/Utilities/Constants.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
-import 'dart:html' as html;
+import 'package:recipy/Views/Articles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class rNavBar extends StatefulWidget {
@@ -127,7 +128,7 @@ class _rNavBarState extends State<rNavBar> {
                       height: 35,
                       width: mediaSize.width * 0.06,
                       child: TextButton(
-                        onPressed: ()=>{},
+                        onPressed: ()=> Navigator.push(context, CustomRoute(Articles())),
                         style: TextButton.styleFrom(
                             backgroundColor: CustomTheme.buttonPrimary
                         ),

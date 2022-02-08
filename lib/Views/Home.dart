@@ -2,24 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:recipy/CustomWidgets/Editor.dart';
 import 'package:recipy/CustomWidgets/NewestArticles.dart';
 import 'package:recipy/CustomWidgets/RecommendedArticles.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
 import 'package:recipy/CustomWidgets/rNavBar.dart';
 import 'package:recipy/Entities/Article.dart';
-import 'package:recipy/Entities/Recipe.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tuple/tuple.dart';
 
 class Home extends StatefulWidget {
 
@@ -32,6 +25,7 @@ class _HomeState extends State<Home> {
   List<Article> recommendedArticles = [];
   StreamController<bool> newestArticlesStreamController = StreamController<bool>();
   List<Article> newestArticles = [];
+  ScrollController scrollController = ScrollController();
 
   Future<void> getRecommendedArticles() async{
     String response = await Requests.getRecommendedArticles();
@@ -61,8 +55,14 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void dispose() {
+    recommendedArticlesStreamController.close();
+    newestArticlesStreamController.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    ScrollController scrollController = ScrollController();
     final mediaSize = Utilities.getDimensions(context);
     return Scaffold(
       backgroundColor: CustomTheme.background,
@@ -89,7 +89,7 @@ class _HomeState extends State<Home> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(110.0),
+                          padding: const EdgeInsets.fromLTRB(0, 110, 0, 0),
                           child: Column(
                             children: [
                               SizedBox(

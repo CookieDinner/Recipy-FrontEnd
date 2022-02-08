@@ -16,6 +16,8 @@ class CustomTextbox extends StatefulWidget {
     this.errorSize = 11,
     this.inputFormatters = const [],
     this.maxLength = 9999,
+    this.fontSize = 16,
+    this.mode = false,
     this.padding = const EdgeInsets.symmetric(horizontal: 32.0),
     Key? key}) : super(key: key);
 
@@ -25,8 +27,10 @@ class CustomTextbox extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final controller;
   final bool obscured;
+  final bool mode;
   final double width;
   final double errorSize;
+  final double fontSize;
   final List<FilteringTextInputFormatter> inputFormatters;
   final int maxLength;
   final EdgeInsets padding;
@@ -36,6 +40,7 @@ class CustomTextbox extends StatefulWidget {
 }
 
 class _CustomTextboxState extends State<CustomTextbox> {
+  final TextEditingController _textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -48,13 +53,29 @@ class _CustomTextboxState extends State<CustomTextbox> {
             widget.formKey.currentState?.validate();
           },
           style: TextStyle(
-            color: CustomTheme.textDark
+            color: CustomTheme.textDark,
+            fontSize: widget.fontSize
           ),
           maxLength: widget.maxLength == 9999 ? null : widget.maxLength,
           inputFormatters: widget.inputFormatters,
           obscureText: widget.obscured,
-          controller: widget.controller ?? TextEditingController(),
-          decoration: InputDecoration(
+          controller: widget.controller ?? _textEditingController,
+          decoration: widget.mode ? InputDecoration(
+            border: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1)
+            ),
+            focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1)
+            ),
+            enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1)
+            ),
+            errorBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 1)
+            ),
+            focusedErrorBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 1)
+            ),
             errorStyle: TextStyle(
               fontSize: widget.errorSize,
             ),
@@ -64,6 +85,16 @@ class _CustomTextboxState extends State<CustomTextbox> {
             labelStyle: TextStyle(
               color: CustomTheme.art4
             )
+          ) : InputDecoration(
+              errorStyle: TextStyle(
+                fontSize: widget.errorSize,
+              ),
+              errorMaxLines: 2,
+              isDense: true,
+              labelText: widget.labelText,
+              labelStyle: TextStyle(
+                  color: CustomTheme.art4
+              )
           ),
           validator: widget.validator,
           onSaved: widget.onSaved,

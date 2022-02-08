@@ -1,10 +1,9 @@
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:recipy/CustomWidgets/CustomTextbox.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
-import 'dart:html' as html;
-
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

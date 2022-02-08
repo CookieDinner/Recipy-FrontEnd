@@ -3,11 +3,12 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:recipy/Entities/Article.dart';
 import 'package:recipy/Utilities/Constants.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Utilities.dart';
+import 'package:recipy/Views/ArticleView.dart';
 
 class RecommendedArticles extends StatefulWidget {
   final Size mediaSize;
@@ -101,6 +102,36 @@ class _RecommendedArticlesState extends State<RecommendedArticles> {
                             width: 450,
                             child: Text(parsedContent + " (...)",
                               style: Constants.textStyle(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),),
+                          ),
+                          SizedBox(
+                            width: widget.mediaSize.width * 0.25,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  height: 35,
+                                  width: widget.mediaSize.width * 0.06,
+                                  child: TextButton(
+                                    onPressed: ()=> Navigator.of(context).push(CustomRoute(ArticleView(widget.articles[index].id))),
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: CustomTheme.iconSelectedFill.withOpacity(0.3)
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                          "Czytaj dalej",
+                                          style: Constants.textStyle(
+                                              textStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: CustomTheme.textDark
+                                              )
+                                          )
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
