@@ -81971,10 +81971,10 @@ $0(){this.a.c=!1},
 $S:0}
 A.a1D.prototype={
 a4F(){return A.e1(null,16,this.a,B.aS,"Nazwa sk\u0142adnika",30,!1,!1,new A.a1T(),B.jd,new A.a1U(),300)},
-a4l(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 kalorii",16,!1,!1,new A.a1N(),B.jd,new A.a1O(),180)},
-a4w(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 t\u0142uszczy",16,!1,!1,new A.a1R(),B.d0,new A.a1S(),180)},
-a4m(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 w\u0119glowodan\xf3w",16,!1,!1,new A.a1P(),B.jd,new A.a1Q(),180)},
-a4N(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 bia\u0142ka",16,!1,!1,new A.a1V(),B.d0,new A.a1W(),180)},
+a4l(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 kalorii",8,!1,!1,new A.a1N(),B.jd,new A.a1O(),180)},
+a4w(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 t\u0142uszczy",8,!1,!1,new A.a1R(),B.d0,new A.a1S(),180)},
+a4m(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 w\u0119glowodan\xf3w",8,!1,!1,new A.a1P(),B.jd,new A.a1Q(),180)},
+a4N(){return A.e1(null,16,this.a,A.a([new A.kf(A.bj("[0-9.]",!0),!0,"")],t.Ui),"Ilo\u015b\u0107 bia\u0142ka",8,!1,!1,new A.a1V(),B.d0,new A.a1W(),180)},
 a4S(){var s,r=null,q=$.azm,p=t.fo
 p=A.aG(new A.aw(A.a(["szt","mL","L","mg","g","kg"],t.s),new A.a1Y(),p),!0,p.i("bd.E"))
 s=A.Q(r,r,B.f,B.aA,r,r,r,1,r,r,r,r,r,r)
