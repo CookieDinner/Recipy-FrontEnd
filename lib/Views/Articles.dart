@@ -203,7 +203,7 @@ class _ArticlesState extends State<Articles> {
                                           titleController.text = search_title ?? "";
                                           authorController.text = search_author ?? "";
                                           return SizedBox(
-                                            width: 932,
+                                            width: 1000,
                                             height: 80,
                                             child: Form(
                                                 key: _searchFormKey,

@@ -13,7 +13,8 @@ class ArticlesList extends StatefulWidget {
   final Size mediaSize;
   final List<Article> articles;
   final Function deleteArticle;
-  const ArticlesList(this.mediaSize, this.articles, this.deleteArticle, {Key? key}) : super(key: key);
+  final bool myArticles;
+  const ArticlesList(this.mediaSize, this.articles, this.deleteArticle, {this.myArticles = false, Key? key}) : super(key: key);
 
   @override
   _ArticlesListState createState() => _ArticlesListState();
@@ -134,7 +135,7 @@ class _ArticlesListState extends State<ArticlesList> {
                           )
                         ),
                       ),
-                      Container(
+                      widget.myArticles ? Container(
                           height: 35,
                           width: 300,
                           child: Row(
@@ -159,7 +160,7 @@ class _ArticlesListState extends State<ArticlesList> {
                               ),
                             ],
                           )
-                      )
+                      ) : Container()
                     ],
                   ),
                 ),
