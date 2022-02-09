@@ -14,6 +14,7 @@ import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
 import 'package:recipy/Views/AboutUs.dart';
 import 'package:recipy/Views/Articles.dart';
+import 'package:recipy/Views/Home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:html' as html;
 
@@ -84,7 +85,11 @@ class _rNavBarState extends State<rNavBar> {
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: () => html.window.location.reload(),
+                onTap: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  CustomRoute(Home()),
+                  ModalRoute.withName('/'),
+                ),
                 child: SizedBox(
                   width: mediaSize.width * 0.15,
                   child: Image.asset('assets/images/logoTight.png')

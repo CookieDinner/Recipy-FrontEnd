@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Views/Home.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() async{
-  setPathUrlStrategy();
   runApp(const RecipyApp());
 }
 
@@ -17,7 +17,10 @@ class RecipyApp extends StatelessWidget{
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      routes: {
+        "/" : (context) => Home()
+      },
+      initialRoute: "/",
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(

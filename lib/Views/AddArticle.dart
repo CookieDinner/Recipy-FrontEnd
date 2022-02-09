@@ -14,10 +14,13 @@ import 'package:recipy/CustomWidgets/Waves.dart';
 import 'package:recipy/CustomWidgets/rNavBar.dart';
 import 'package:recipy/Entities/Ingredient.dart';
 import 'package:recipy/Utilities/Constants.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
 import 'dart:html' as html;
+
+import 'Home.dart';
 
 class AddArticle extends StatefulWidget {
   const AddArticle({Key? key}) : super(key: key);
@@ -304,7 +307,11 @@ class _AddArticleState extends State<AddArticle> {
                                   width: mediaSize.width * 0.15,
                                   height: 75,
                                   child: TextButton(
-                                    onPressed: wasSubmitSuccessful ? () => html.window.location.reload() : isSubmitButtonDisabled ? null : () async {
+                                    onPressed: wasSubmitSuccessful ? () => Navigator.pushAndRemoveUntil(
+                                      context,
+                                      CustomRoute(Home()),
+                                      ModalRoute.withName('/'),
+                                    ) : isSubmitButtonDisabled ? null : () async {
                                       setState(() {
                                         isSubmitButtonDisabled = true;
                                       });

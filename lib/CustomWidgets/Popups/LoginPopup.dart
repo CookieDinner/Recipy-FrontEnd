@@ -3,8 +3,10 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:recipy/CustomWidgets/CustomTextbox.dart';
 import 'package:recipy/Utilities/Constants.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
+import 'package:recipy/Views/Home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPopup{
@@ -86,7 +88,11 @@ class LoginPopup{
                                           }else if (token != "connfailed" || token != "conntimeout" || token != "httpexception"){
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString("accessToken", token);
-                                            html.window.location.reload();
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              CustomRoute(Home()),
+                                              ModalRoute.withName('/'),
+                                            );
                                           }
                                           setState(() {
                                             isLoginButtonDisabled = false;

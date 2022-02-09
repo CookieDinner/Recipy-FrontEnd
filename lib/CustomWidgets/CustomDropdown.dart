@@ -6,6 +6,7 @@ import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Views/AddArticle.dart';
 import 'package:recipy/Views/Articles.dart';
+import 'package:recipy/Views/Home.dart';
 import 'package:recipy/Views/RecipeShelf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:html' as html;
@@ -113,7 +114,11 @@ class CustomDropdown {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove("accessToken");
                 prefs.remove("username");
-                html.window.location.reload();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  CustomRoute(Home()),
+                  ModalRoute.withName('/'),
+                );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
