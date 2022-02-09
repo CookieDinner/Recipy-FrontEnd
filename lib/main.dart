@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Views/Home.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -19,7 +18,6 @@ class RecipyApp extends StatelessWidget{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Home(),
-      navigatorObservers: [NavigationHistoryObserver()],
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
