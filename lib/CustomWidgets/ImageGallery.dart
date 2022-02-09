@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:recipy/CustomWidgets/Popups/ImagePopup.dart';
+import 'package:recipy/Utilities/CustomTheme.dart';
 
 class ImageGallery extends StatefulWidget {
   StreamController imageStreamController;
@@ -24,7 +25,7 @@ class _ImageGalleryState extends State<ImageGallery> {
         builder: (context, snapshot) {
           return Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 2)
+              border: Border.all(color: CustomTheme.text, width: 2),
             ),
             height: 200,
             width: 1500,
@@ -53,7 +54,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                                 ),
                               ),
                             ),
-                            Row(
+                            widget.canDelete ? Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
@@ -74,7 +75,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                                   ),
                                 ),
                               ],
-                            ),
+                            ) : Container(),
                           ],
                         ),
                       ),

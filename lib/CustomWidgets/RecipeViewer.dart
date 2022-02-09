@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:recipy/Entities/Recipe.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
+import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
 
 class RecipeViewer extends StatefulWidget {
-  const RecipeViewer(this.recipe, {Key? key}) : super(key: key);
+  const RecipeViewer(this.recipe, {this.hasAddButton = true, Key? key}) : super(key: key);
   final Recipe recipe;
+  final bool hasAddButton;
   @override
   _RecipeViewerState createState() => _RecipeViewerState();
 }
 
 class _RecipeViewerState extends State<RecipeViewer> {
   late List<String?> steps;
+  bool isShelfButtonDeactivated = false;
   @override
   void initState() {
     widget.recipe.calculateNutrition();
@@ -146,6 +149,41 @@ class _RecipeViewerState extends State<RecipeViewer> {
               ),
             ),
             SizedBox(height: 20),
+            widget.hasAddButton && widget.recipe.isInShelf != null ? SizedBox(
+              width: 200,
+              height: 45,
+              child: TextButton(
+                onPressed: isShelfButtonDeactivated ? null : () async{
+                  setState(() {
+                    isShelfButtonDeactivated = true;
+                  });
+                  String response = widget.recipe.isInShelf! ? await Requests.removeRecipeFromShelf(widget.recipe) : await Requests.addRecipeToShelf(widget.recipe);
+                  if (response == "Good") {
+                    setState(() {
+                      widget.recipe.isInShelf = !(widget.recipe.isInShelf!);
+                    });
+                  }
+                  setState(() {
+                    isShelfButtonDeactivated = false;
+                  });
+                },
+                style: TextButton.styleFrom(
+                    backgroundColor: isShelfButtonDeactivated ? Colors.grey : widget.recipe.isInShelf! ? Colors.red : CustomTheme.buttonPrimary
+                ),
+                child: Center(
+                  child: Text(
+                      widget.recipe.isInShelf! ? "Usuń przepis z szafki" : "Dodaj przepis do szafki",
+                      style: Constants.textStyle(
+                          textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white
+                          )
+                      )
+                  ),
+                ),
+              ),
+            ) : Container(),
           ],
         ),
       ),

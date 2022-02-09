@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:recipy/CustomWidgets/Editor.dart';
+import 'package:recipy/CustomWidgets/ImageGallery.dart';
 import 'package:recipy/CustomWidgets/RecipeViewer.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
 import 'package:recipy/CustomWidgets/rNavBar.dart';
@@ -35,7 +36,7 @@ class _ArticleViewState extends State<ArticleView> {
   final articleStreamController = StreamController<bool>();
   late Article article;
   String? accessToken;
-  late double userRating;
+  int? userId;
   late quill.QuillController quillController;
   
   Future<void> getArticle() async {
@@ -45,8 +46,10 @@ class _ArticleViewState extends State<ArticleView> {
       document: quill.Document.fromJson(jsonDecode(article.content)),
       selection: const TextSelection.collapsed(offset: 0)
     );
+    for (Uint8List image in article.resources) {
+      images.add(image);
+    }
     articleStreamController.add(true);
-    userRating = article.userRating;
   }
 
   @override
@@ -55,6 +58,7 @@ class _ArticleViewState extends State<ArticleView> {
       await getArticle();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       accessToken = prefs.getString("accessToken");
+      userId = prefs.getInt("userId");
     });
     super.initState();
   }
@@ -85,29 +89,44 @@ class _ArticleViewState extends State<ArticleView> {
                     child: SingleChildScrollView(
                       controller: scrollController,
                       child: SizedBox(
-                        height: 1700,
+                        height: 2000,
                         width: mediaSize.width,
                         child: StreamBuilder(
                           stream: articleStreamController.stream,
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
-                              return const Center(
-                                child: SizedBox(
-                                  height: 42,
-                                  width: 60,
-                                  child: Center(
-                                    child: SpinKitFadingCircle(
-                                      size: 30,
-                                      color: Colors.grey,
+                              return Center(
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: mediaSize.height * 0.3,),
+                                    Text("Trwa pobieranie artykułu...",
+                                      style: Constants.textStyle(
+                                          textStyle: TextStyle(
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold,
+                                              color: CustomTheme.text,
+                                              height: 2
+                                          )
+                                      ),
                                     ),
-                                  ),
+                                    const SizedBox(
+                                      height: 400,
+                                      width: 400,
+                                      child: Center(
+                                        child: SpinKitFadingCircle(
+                                          size: 120,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             } else {
                               return Column(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(110.0),
+                                      padding: const EdgeInsets.fromLTRB(110, 110, 110, 0),
                                       //Top page title
                                       child: SizedBox(
                                           child: Text(article.title,
@@ -122,13 +141,40 @@ class _ArticleViewState extends State<ArticleView> {
                                           )
                                       ),
                                     ),
-                                    Waves(color1: CustomTheme.background, color2: CustomTheme.accent1,),
+                                    Stack(
+                                      children: [
+                                        SizedBox(
+                                            height: 100,
+                                            child: Waves(color1: CustomTheme.background, color2: CustomTheme.accent1,)
+                                        ),
+                                        Positioned(
+                                          left: mediaSize.width * 0.18,
+                                          bottom: 15,
+                                          child: Image.asset('assets/images/tree.png', height: 65,),
+                                        ),
+                                        Positioned(
+                                          left: mediaSize.width * 0.207,
+                                          bottom: 15,
+                                          child: Image.asset('assets/images/tree.png', height: 35,),
+                                        ),
+                                        Positioned(
+                                          left: mediaSize.width * 0.227,
+                                          bottom: 18,
+                                          child: Image.asset('assets/images/tree.png', height: 45,),
+                                        ),
+                                        Positioned(
+                                          right: mediaSize.width * 0.195,
+                                          bottom: 0,
+                                          child: Image.asset('assets/images/tree.png', height: 90,),
+                                        ),
+                                      ],
+                                    ),
                                     Waves(color1: CustomTheme.accent1, color2: CustomTheme.secondaryBackground,),
                                     Container(
                                       width: mediaSize.width,
                                       color: CustomTheme.secondaryBackground,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+                                        padding: const EdgeInsets.fromLTRB(40, 50, 40, 0),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -153,7 +199,7 @@ class _ArticleViewState extends State<ArticleView> {
                                                           Text(article.date, style: Constants.textStyle(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
                                                         ],
                                                       ),
-                                                      SizedBox(
+                                                      article.isPublished! ? SizedBox(
                                                         width: 335,
                                                         child: Row(
                                                           children: [
@@ -177,8 +223,8 @@ class _ArticleViewState extends State<ArticleView> {
                                                             Text("( " + article.rating.toStringAsFixed(2) + " )", style: Constants.textStyle(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
                                                           ],
                                                         ),
-                                                      ),
-                                                      accessToken != null ? SizedBox(
+                                                      ) : Container(),
+                                                      accessToken != null && userId != null && userId != article.author_id ? SizedBox(
                                                         width: 335,
                                                         height: 28,
                                                         child: Row(
@@ -193,12 +239,16 @@ class _ArticleViewState extends State<ArticleView> {
                                                                 itemBuilder: (context, _){
                                                                   return FaIcon(
                                                                       FontAwesomeIcons.breadSlice,
-                                                                      color: CustomTheme.textDark.withOpacity(0.8)
+                                                                      color: CustomTheme.buttonSecondary.withOpacity(0.75)
                                                                   );
                                                                 },
-                                                                onRatingUpdate: (rating) => setState(() {
-                                                                  userRating = rating;
-                                                                }),
+                                                                onRatingUpdate: (rating) async {
+                                                                  String response = await Requests.rateArticle(article, rating);
+                                                                    setState(() {
+                                                                      article.userRating = rating;
+                                                                      article.rating = jsonDecode(response)["new_rate"];
+                                                                    });
+                                                                },
                                                                 allowHalfRating: false,
                                                                 minRating: 1.0,
                                                                 maxRating: 5.0,
@@ -209,7 +259,7 @@ class _ArticleViewState extends State<ArticleView> {
                                                               ),
                                                             ),
                                                             SizedBox(width: 10,),
-                                                            Text("( " + userRating.toStringAsFixed(2) + " )", style: Constants.textStyle(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
+                                                            Text("( " + article.userRating.toStringAsFixed(2) + " )", style: Constants.textStyle(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w200, color: CustomTheme.textDark)),)
                                                           ],
                                                         ),
                                                       ) : SizedBox(height: 28,),
@@ -222,6 +272,31 @@ class _ArticleViewState extends State<ArticleView> {
                                             RecipeViewer(article.recipe)
                                           ],
                                         ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: mediaSize.width,
+                                      color: CustomTheme.secondaryBackground,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("Galeria zdjęć",
+                                              style: Constants.textStyle(
+                                                  textStyle: TextStyle(
+                                                    fontSize: 32,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: CustomTheme.textDark,
+                                                  )
+                                              )
+                                          ),
+                                          SizedBox(height: 40,),
+                                          ImageGallery(imageStreamController: StreamController(), images: images, canDelete: false,),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        color: CustomTheme.secondaryBackground,
                                       ),
                                     ),
                                     Container(

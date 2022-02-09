@@ -5,6 +5,8 @@ import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Views/AddArticle.dart';
+import 'package:recipy/Views/Articles.dart';
+import 'package:recipy/Views/RecipeShelf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:html' as html;
 
@@ -21,7 +23,7 @@ class CustomDropdown {
         items: [
           DropdownMenuItem(
             value: (){
-              Navigator.push(context, CustomRoute(AddArticle()));
+              Navigator.push(context, CustomRoute(Articles(myArticles: true,)));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,9 +45,7 @@ class CustomDropdown {
             ),
           ),
           DropdownMenuItem(
-            value: (){
-              debugPrint("your mom");
-            },
+            value: () => Navigator.of(context).push(CustomRoute(RecipeShelf())),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children:  [

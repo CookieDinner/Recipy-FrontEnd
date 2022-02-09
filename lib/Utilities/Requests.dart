@@ -6,7 +6,9 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:recipy/Entities/Article.dart';
 import 'package:recipy/Entities/Ingredient.dart';
+import 'package:recipy/Entities/Recipe.dart';
 import 'package:recipy/Utilities/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:convert/convert.dart';
@@ -196,7 +198,7 @@ class Requests{
       builtIngredients.add({"ingredient_id" : ingredient.id.toString(), "amount" : ingredient.amount.toString()});
     }
     for (Uint8List resource in resources) {
-      builtResources.add({"bytes" : hex.encode(resource)});
+      builtResources.add({"bytes" : base64.encode(resource)});
     }
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -240,6 +242,8 @@ class Requests{
 
   static Future<String> getArticles({var filter, var sort, var search_title, var search_author, var amount, var start, var category}) async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString("accessToken");
       String params = "" +
           (filter != null ? "filter="+filter.toString()+"&" : "") +
           (sort != null ? "sort="+sort.toString()+"&" : "") +
@@ -250,6 +254,9 @@ class Requests{
           (start != null ? "start="+start.toString()+"&" : "");
       http.Response response = await http.get(
           Uri.parse("${Constants.getArticlesAPI}?$params"),
+        headers: accessToken != null ? {
+            "x-access-token" : accessToken
+        } : {}
       ).timeout(const Duration(seconds: Constants.timeoutTime));
       if (response.statusCode == 401){
         return "NotFound";
@@ -382,5 +389,171 @@ class Requests{
       return "httpexception";
     }
   }
+
+  static Future<String> rateArticle(Article article, double newRating) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString("accessToken")!;
+      http.Response response = await http.post(
+          Uri.parse(Constants.postRatingAPI),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-access-token' : accessToken
+          },
+        body: jsonEncode({
+          "rate" : newRating.toStringAsFixed(2),
+          "rated" : article.id.toString()
+        })
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        if (response.statusCode == 200) {
+          return response.body;
+        } else {
+          return "Idk";
+        }
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> deleteArticle(int articleId) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString("accessToken")!;
+      http.Response response = await http.delete(
+          Uri.parse("${Constants.articleAPI}/$articleId"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-access-token' : accessToken
+          },
+
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        if (response.statusCode == 200) {
+          return "Good";
+        } else {
+          return "Idk";
+        }
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> addRecipeToShelf(Recipe recipe) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString("accessToken")!;
+      http.Response response = await http.post(
+          Uri.parse("${Constants.postSaveRecipeAPI}/${recipe.id}"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-access-token' : accessToken
+          },
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        if (response.statusCode == 200) {
+          return "Good";
+        } else {
+          return "Idk";
+        }
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> removeRecipeFromShelf(Recipe recipe) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString("accessToken")!;
+      http.Response response = await http.delete(
+        Uri.parse("${Constants.deleteRemoveRecipeAPI}/${recipe.id}"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token' : accessToken
+        },
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        if (response.statusCode == 200) {
+          return "Good";
+        } else {
+          return "Idk";
+        }
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> getMyRecipesInShelf() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString("accessToken")!;
+      http.Response response = await http.get(
+        Uri.parse(Constants.getMySavedRecipesAPI),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token' : accessToken
+        },
+      ).timeout(const Duration(seconds: Constants.timeoutTime));
+      if (response.statusCode == 401){
+        return "NotFound";
+      }else{
+        if (response.statusCode == 200) {
+          return response.body;
+        } else {
+          return "Idk";
+        }
+      }
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
 
 }

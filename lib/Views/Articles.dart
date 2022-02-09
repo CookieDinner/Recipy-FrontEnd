@@ -11,12 +11,15 @@ import 'package:recipy/CustomWidgets/Waves.dart';
 import 'package:recipy/CustomWidgets/rNavBar.dart';
 import 'package:recipy/Entities/Article.dart';
 import 'package:recipy/Utilities/Constants.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
+import 'package:recipy/Views/AddArticle.dart';
 
 class Articles extends StatefulWidget {
-  const Articles({Key? key}) : super(key: key);
+  final bool myArticles;
+  const Articles({this.myArticles = false, Key? key}) : super(key: key);
 
   @override
   _ArticlesState createState() => _ArticlesState();
@@ -50,7 +53,7 @@ class _ArticlesState extends State<Articles> {
     articles.clear();
     articlesStreamController.add(false);
     //print("Sort by: $sortBy, Category: ${category ?? "None"}, Search title: ${search_title == null || search_title!.isEmpty ? "None" : search_title}, Search author: ${search_author == null || search_author!.isEmpty ? "None" : search_author}");
-    String response = await Requests.getArticles(
+    String response = !widget.myArticles ? await Requests.getArticles(
         sort: sortBy,
         category: category == "Brak" ? null : category,
         filter: "search",
@@ -58,6 +61,12 @@ class _ArticlesState extends State<Articles> {
         amount: 12,
         search_title: search_title,
         search_author: search_author
+
+    ) : await Requests.getArticles(
+        filter: "my",
+        start: ((currentPage - 1) * 12),
+        amount: 12,
+        sort: "newest"
     );
     dynamic decodedString = jsonDecode(response);
     for (Map<String, dynamic> article in decodedString["data"]) {
@@ -69,6 +78,13 @@ class _ArticlesState extends State<Articles> {
       this.currentPage = currentPage;
       isSearchButtonDisabled = false;
     });
+    articlesStreamController.add(true);
+  }
+
+  Future<void> deleteArticle(Article article) async {
+    articlesStreamController.add(false);
+    await Requests.deleteArticle(article.id);
+    await getArticles(currentPage);
     articlesStreamController.add(true);
   }
 
@@ -121,7 +137,7 @@ class _ArticlesState extends State<Articles> {
                           child: Column(
                             children: [
                               SizedBox(
-                                  child: Text("Artykuły",
+                                  child: Text(widget.myArticles ? "Moje artykuły" : "Artykuły",
                                     style: Constants.textStyle(
                                         textStyle: TextStyle(
                                             fontSize: 60,
@@ -169,7 +185,7 @@ class _ArticlesState extends State<Articles> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const SizedBox(height: 32,),
-                                    StreamBuilder(
+                                    !widget.myArticles ? StreamBuilder(
                                       stream: categoriesStreamController.stream,
                                       builder: (context, snapshot) {
                                         if (!snapshot.hasData){
@@ -231,7 +247,31 @@ class _ArticlesState extends State<Articles> {
                                           );
                                         }
                                       }
-                                    ),
+                                    ) : Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 60),
+                                      child: SizedBox(
+                                        width: 200,
+                                        height: 45,
+                                        child: TextButton(
+                                          onPressed: () => Navigator.of(context).push(CustomRoute(AddArticle())),
+                                          style: TextButton.styleFrom(
+                                              backgroundColor: CustomTheme.buttonPrimary
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                                "Dodaj nowy artykuł",
+                                                style: Constants.textStyle(
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w500,
+                                                        color: Colors.white
+                                                    )
+                                                )
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ) ,
                                     Container(
                                       height: mediaSize.width * 0.45,
                                       width: mediaSize.width * 0.55,
@@ -271,7 +311,7 @@ class _ArticlesState extends State<Articles> {
                                                       children: [
                                                         NavigationButtons(currentPage: currentPage, listLength: numberOfPages!, amountPerPage: 12, getPage: getArticles),
                                                         SizedBox(height: 20,),
-                                                        ArticlesList(mediaSize, articles),
+                                                        ArticlesList(mediaSize, articles, deleteArticle),
                                                         NavigationButtons(currentPage: currentPage, listLength: numberOfPages!, amountPerPage: 12, getPage: getArticles)
                                                       ],
                                                     );

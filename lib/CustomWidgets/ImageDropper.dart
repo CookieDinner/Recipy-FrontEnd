@@ -56,7 +56,7 @@ class _ImageDropperState extends State<ImageDropper> {
                       children: [
                         Icon(Icons.cloud_upload, size: 80, color: Colors.white,),
                         Text("Wrzuć zdjęcie tutaj", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                        Text("Maksymalny rozmiar: 5MB\n Maksymalna liczba zdjęć: 6", style: TextStyle(color: Colors.white, fontSize: 12), textAlign: TextAlign.center,),
+                        Text("Maksymalny rozmiar: 500kB\n Maksymalna liczba zdjęć: 6", style: TextStyle(color: Colors.white, fontSize: 12), textAlign: TextAlign.center,),
                         !showError ? Container() : Text(errorText, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
                       ],
                     )
@@ -68,6 +68,7 @@ class _ImageDropperState extends State<ImageDropper> {
           imageStreamController: imageStreamController,
           images: widget.images,
           resetError: resetError,
+          canDelete: true,
         )
       ],
     );
@@ -87,14 +88,13 @@ class _ImageDropperState extends State<ImageDropper> {
       });
       return;
     }
-    if (size > 5000000) {
+    if (size > 520000) {
       setState(() {
         showError = true;
         errorText = "Podane zdjęcie jest zbyt duże!";
       });
       return;
     }
-    print(widget.images.length);
     if (widget.images.length > 5) {
       setState(() {
         showError = true;

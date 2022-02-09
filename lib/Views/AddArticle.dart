@@ -17,6 +17,7 @@ import 'package:recipy/Utilities/Constants.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
+import 'dart:html' as html;
 
 class AddArticle extends StatefulWidget {
   const AddArticle({Key? key}) : super(key: key);
@@ -115,7 +116,7 @@ class _AddArticleState extends State<AddArticle> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(110.0),
+                          padding: const EdgeInsets.fromLTRB(110, 110, 110, 0),
                           //Top page title
                           child: SizedBox(
                               child: Text("Nowy artykuł",
@@ -130,7 +131,34 @@ class _AddArticleState extends State<AddArticle> {
                               )
                           ),
                         ),
-                        Waves(color1: CustomTheme.background, color2: CustomTheme.accent1,),
+                        Stack(
+                          children: [
+                            SizedBox(
+                                height: 100,
+                                child: Waves(color1: CustomTheme.background, color2: CustomTheme.accent1,)
+                            ),
+                            Positioned(
+                              left: mediaSize.width * 0.18,
+                              bottom: 15,
+                              child: Image.asset('assets/images/tree.png', height: 65,),
+                            ),
+                            Positioned(
+                              left: mediaSize.width * 0.207,
+                              bottom: 15,
+                              child: Image.asset('assets/images/tree.png', height: 35,),
+                            ),
+                            Positioned(
+                              left: mediaSize.width * 0.227,
+                              bottom: 18,
+                              child: Image.asset('assets/images/tree.png', height: 45,),
+                            ),
+                            Positioned(
+                              right: mediaSize.width * 0.195,
+                              bottom: 0,
+                              child: Image.asset('assets/images/tree.png', height: 90,),
+                            ),
+                          ],
+                        ),
                         Waves(color1: CustomTheme.accent1, color2: CustomTheme.secondaryBackground,),
                         Container(height: 50, color: CustomTheme.secondaryBackground,),
                         //Whole article form
@@ -276,7 +304,7 @@ class _AddArticleState extends State<AddArticle> {
                                   width: mediaSize.width * 0.15,
                                   height: 75,
                                   child: TextButton(
-                                    onPressed: wasSubmitSuccessful ? () => Navigator.of(context).pop() : isSubmitButtonDisabled ? null : () async {
+                                    onPressed: wasSubmitSuccessful ? () => html.window.location.reload() : isSubmitButtonDisabled ? null : () async {
                                       setState(() {
                                         isSubmitButtonDisabled = true;
                                       });

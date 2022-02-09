@@ -19,6 +19,11 @@ class Constants {
   static const String addIngredientAPI = "$apiRoot/ingredient";
   static const String getCategoriesAPI = "$apiRoot/categories";
   static const String getIngredientsAPI = "$apiRoot/ingredients";
+  static const String postRatingAPI = "$apiRoot/rate_article";
+  static const String postSaveRecipeAPI = "$apiRoot/save_recipe";
+  static const String deleteRemoveRecipeAPI = "$apiRoot/remove_recipe";
+  static const String getMySavedRecipesAPI = "$apiRoot/saved_recipes";
+
   static TextStyle textStyle({TextStyle? textStyle}){
     return GoogleFonts.ptSans(textStyle: textStyle);
   }

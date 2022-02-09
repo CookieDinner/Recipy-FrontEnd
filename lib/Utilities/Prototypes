@@ -54,13 +54,10 @@ Future acceptFile(dynamic event) async {
     final name = await imageController.getFilename(event);
     final bytes = await imageController.getFileData(event);
     final size = await imageController.getFileSize(event);
-    if (size > 5000000) {
-      print("Podane zdjęcie jest za duże");
-    } else {
+    if (!size > 5000000) {
       setState(() {
         images.add(bytes);
         imageStreamController.add(true);
       });
-      print(size);
     }
   }

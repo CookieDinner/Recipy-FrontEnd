@@ -12,8 +12,10 @@ import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
+import 'package:recipy/Views/AboutUs.dart';
 import 'package:recipy/Views/Articles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:html' as html;
 
 class rNavBar extends StatefulWidget {
   const rNavBar({Key? key}) : super(key: key);
@@ -82,7 +84,7 @@ class _rNavBarState extends State<rNavBar> {
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                onTap: () => html.window.location.reload(),
                 child: SizedBox(
                   width: mediaSize.width * 0.15,
                   child: Image.asset('assets/images/logoTight.png')
@@ -101,9 +103,7 @@ class _rNavBarState extends State<rNavBar> {
                       height: 35,
                       width: mediaSize.width * 0.06,
                       child: TextButton(
-                        onPressed: ()=>{
-                          print(NavigationHistoryObserver().history)
-                        },
+                        onPressed: ()=> Navigator.push(context, CustomRoute(AboutUs())),
                         style: TextButton.styleFrom(
                             backgroundColor: CustomTheme.buttonPrimary
                         ),

@@ -1,21 +1,23 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:recipy/Entities/Ingredient.dart';
 import 'package:recipy/Entities/Recipe.dart';
+import 'package:convert/convert.dart';
 
 class Article{
   late final int id;
   late final int author_id;
   late final String author;
-  late final double rating;
-  late final double userRating;
+  late double rating;
+  late double userRating;
   late final String date;
   late final String category;
   late final String title;
   late final String content;
   late final Recipe recipe;
-  late final bool isPublished;
-  late final List<Uint8List> resources;
+  late final bool? isPublished;
+  late final List<Uint8List> resources = [];
   Article({required this.id, required this.author_id, required this.author, required this.category, required this.title, required this.content, required this.recipe, required this.rating, required this.date});
   Article.fromGeneric(Map<String, dynamic> article){
     id = article["id"];
@@ -31,6 +33,7 @@ class Article{
         title: article["recipe_title"],
         content: article["recipe_content"]
     );
+    isPublished = article["is_published"];
   }
   Article.fromDetailed(Map<String, dynamic> article) {
     id = article["id"];
@@ -55,14 +58,24 @@ class Article{
           unit: ingredient["unit"]));
     }
     recipe = Recipe(
+        id: article["recipe_id"],
         user_id: article["author_id"],
         title: article["recipe_title"],
         content: article["recipe_content"],
-        ingredients: temp_ingredients
+        ingredients: temp_ingredients,
+        isInShelf: article["is_saved"]
     );
     isPublished = article["is_published"];
-    // for (dynamic resource in article["resources"]) {
-    //   resources.add(Uint8List.fromList(hex.decode(resource["bytes"])));
-    // }
+    for (dynamic resource in article["resources"]) {
+      Uint8List? decodedImage;
+      try {
+        decodedImage = base64.decode(resource["bytes"]);
+      } on FormatException{
+        decodedImage = null;
+      }
+      if (decodedImage != null) {
+        resources.add(decodedImage);
+      }
+    }
   }
 }
