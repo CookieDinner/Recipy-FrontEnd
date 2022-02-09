@@ -25,9 +25,32 @@ class Utilities{
     return cleanText;
   }
 
+  static List<String?> createRecipeStepsList(String steps) {
+    List<String?> stepsList = [];
+    var decodedSteps = jsonDecode(steps);
+    for (var json in decodedSteps) {
+      stepsList.add(json["insert"]);
+    }
+    return stepsList;
+  }
+
+  static String createRecipeStepsString(List<String?> stepsList) {
+    List<Map<String, String?>> steps = [];
+    for (String? step in stepsList) {
+      steps.add({"insert" : step});
+    }
+    return jsonEncode(steps);
+  }
+
   static Future<String?> getAccessToken() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString("accessToken");
     return accessToken;
+  }
+
+  static Future<String?> getUsername() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString("username");
+    return username;
   }
 }

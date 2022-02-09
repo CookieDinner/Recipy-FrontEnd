@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:recipy/CustomWidgets/CustomDropdown.dart';
-import 'package:recipy/CustomWidgets/LoginPopup.dart';
-import 'package:recipy/CustomWidgets/RegisterPopup.dart';
+import 'package:recipy/CustomWidgets/Popups/LoginPopup.dart';
+import 'package:recipy/CustomWidgets/Popups/RegisterPopup.dart';
 import 'package:recipy/Utilities/Constants.dart';
+import 'package:recipy/Utilities/CustomRoute.dart';
 import 'package:recipy/Utilities/CustomTheme.dart';
 import 'package:recipy/Utilities/Requests.dart';
 import 'package:recipy/Utilities/Utilities.dart';
-import 'dart:html' as html;
+import 'package:recipy/Views/AboutUs.dart';
+import 'package:recipy/Views/Articles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:html' as html;
 
 class rNavBar extends StatefulWidget {
   const rNavBar({Key? key}) : super(key: key);
@@ -39,10 +43,23 @@ class _rNavBarState extends State<rNavBar> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       String? accessToken = await Utilities.getAccessToken();
       if (accessToken != null){
-        String? userData = await getUserData();
-        String username = jsonDecode(userData!)["username"];
-        loginButtonStreamController.add(username);
+        String? username = await Utilities.getUsername();
+        if (username != null){
+          loginButtonStreamController.add(username);
+        } else {
+          String? userData = await getUserData();
+          username = jsonDecode(userData!)["username"];
+          int id = jsonDecode(userData)["id"];
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("username", username!);
+          prefs.setInt("userId", id);
+          loginButtonStreamController.add(username);
+        }
         registerButtonStreamController.add(true);
+        // String? userData = await getUserData();
+        // //String username = jsonDecode(userData!)["username"];
+        // loginButtonStreamController.add(username);
+        // registerButtonStreamController.add(true);
       }
     });
     super.initState();
@@ -61,15 +78,18 @@ class _rNavBarState extends State<rNavBar> {
       child: Card(
         elevation: 5,
         color: CustomTheme.secondaryBackground,
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Row(
           children: [
-            Padding(
-              child: SizedBox(
-                width: mediaSize.width * 0.15,
-                child: Image.asset('assets/images/logoTight.png')
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => html.window.location.reload(),
+                child: SizedBox(
+                  width: mediaSize.width * 0.15,
+                  child: Image.asset('assets/images/logoTight.png')
+                )
               ),
-              padding: const EdgeInsets.fromLTRB(20, 4, 0, 4),
             ),
             const Spacer(),
             SizedBox(
@@ -83,7 +103,7 @@ class _rNavBarState extends State<rNavBar> {
                       height: 35,
                       width: mediaSize.width * 0.06,
                       child: TextButton(
-                        onPressed: ()=>{},
+                        onPressed: ()=> Navigator.push(context, CustomRoute(AboutUs())),
                         style: TextButton.styleFrom(
                             backgroundColor: CustomTheme.buttonPrimary
                         ),
@@ -108,7 +128,7 @@ class _rNavBarState extends State<rNavBar> {
                       height: 35,
                       width: mediaSize.width * 0.06,
                       child: TextButton(
-                        onPressed: ()=>{},
+                        onPressed: ()=> Navigator.push(context, CustomRoute(Articles())),
                         style: TextButton.styleFrom(
                             backgroundColor: CustomTheme.buttonPrimary
                         ),
