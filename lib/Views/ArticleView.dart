@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:recipy/CustomWidgets/Editor.dart';
+import 'package:recipy/CustomWidgets/Footer.dart';
 import 'package:recipy/CustomWidgets/ImageGallery.dart';
 import 'package:recipy/CustomWidgets/RecipeViewer.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
@@ -299,25 +300,7 @@ class _ArticleViewState extends State<ArticleView> {
                                         color: CustomTheme.secondaryBackground,
                                       ),
                                     ),
-                                    Container(
-                                      height: 60,
-                                      child: Card(
-                                        color: CustomTheme.background,
-                                        elevation: 20,
-                                        margin: EdgeInsets.zero,
-                                        child: Center(
-                                          child: Text("© 2021. Reci.py. All Rights Reserved",
-                                            style: Constants.textStyle(
-                                                textStyle: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: CustomTheme.footerText
-                                                )
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
+                                    Footer(),
                                   ]
                               );
                             }

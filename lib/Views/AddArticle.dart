@@ -8,6 +8,7 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:recipy/CustomWidgets/CustomTextbox.dart';
 import 'package:recipy/CustomWidgets/Editor.dart';
+import 'package:recipy/CustomWidgets/Footer.dart';
 import 'package:recipy/CustomWidgets/ImageDropper.dart';
 import 'package:recipy/CustomWidgets/RecipeEditor.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
@@ -365,26 +366,7 @@ class _AddArticleState extends State<AddArticle> {
                             ),
                           ),
                         ),
-                        //Footer
-                        Container(
-                          height: 60,
-                          child: Card(
-                            color: CustomTheme.background,
-                            elevation: 20,
-                            margin: EdgeInsets.zero,
-                            child: Center(
-                              child: Text("© 2021. Reci.py. All Rights Reserved",
-                                style: Constants.textStyle(
-                                    textStyle: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: CustomTheme.footerText
-                                    )
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
+                        Footer(),
                       ],
                     ),
                   ),

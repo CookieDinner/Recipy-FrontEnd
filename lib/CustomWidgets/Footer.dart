@@ -15,7 +15,7 @@ class Footer extends StatelessWidget {
         elevation: 20,
         margin: EdgeInsets.zero,
         child: Center(
-          child: Text("© 2021. Reci.py. All Rights Reserved",
+          child: Text("© 2022. Reci.py. All Rights Reserved",
             style: Constants.textStyle(
                 textStyle: TextStyle(
                     fontSize: 13,

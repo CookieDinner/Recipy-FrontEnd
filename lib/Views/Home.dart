@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:recipy/CustomWidgets/Footer.dart';
 import 'package:recipy/CustomWidgets/NewestArticles.dart';
 import 'package:recipy/CustomWidgets/RecommendedArticles.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
@@ -229,25 +230,7 @@ class _HomeState extends State<Home> {
                             ],
                           ),
                         ),
-                        Container(
-                          height: 60,
-                          child: Card(
-                            color: CustomTheme.background,
-                            elevation: 20,
-                            margin: EdgeInsets.zero,
-                            child: Center(
-                              child: Text("© 2021. Reci.py. All Rights Reserved",
-                                style: Constants.textStyle(
-                                  textStyle: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: CustomTheme.footerText
-                                  )
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
+                        Footer(),
                       ],
                     ),
                   ),

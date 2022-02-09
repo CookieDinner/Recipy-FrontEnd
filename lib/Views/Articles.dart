@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:recipy/CustomWidgets/ArticlesList.dart';
 import 'package:recipy/CustomWidgets/CustomTextbox.dart';
+import 'package:recipy/CustomWidgets/Footer.dart';
 import 'package:recipy/CustomWidgets/NavigationButtons.dart';
 import 'package:recipy/CustomWidgets/Waves.dart';
 import 'package:recipy/CustomWidgets/rNavBar.dart';
@@ -325,25 +326,7 @@ class _ArticlesState extends State<Articles> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                height: 60,
-                                child: Card(
-                                  color: CustomTheme.background,
-                                  elevation: 20,
-                                  margin: EdgeInsets.zero,
-                                  child: Center(
-                                    child: Text("© 2021. Reci.py. All Rights Reserved",
-                                      style: Constants.textStyle(
-                                          textStyle: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold,
-                                              color: CustomTheme.footerText
-                                          )
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
+                              Footer(),
                             ],
                           ),
                         ),
