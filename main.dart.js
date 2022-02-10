@@ -82612,7 +82612,7 @@ A.asC.prototype={
 $0(){var s=0,r=A.z(t.H),q=this,p
 var $async$$0=A.v(function(a,b){if(a===1)return A.w(b,r)
 while(true)switch(s){case 0:s=2
-return A.C(new A.KQ().kX(q.b,"przepis"),$async$$0)
+return A.C(new A.KQ().kX(q.b,"przepis z szafki"),$async$$0)
 case 2:if(b){p=q.a.a
 p.o0(p.d[q.c])}return A.x(null,r)}})
 return A.y($async$$0,r)},
