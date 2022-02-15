@@ -1,6 +1,7 @@
 # Recipy
 
 Content Management System web application built using Flutter
+Link to the website hosted on github pages: [click here](https://cookiedinner.github.io/Recipy-FrontEnd/#/)
 
 ## Main features
 
